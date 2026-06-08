@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BORA-APP — Verificação de Risco de Atividades Econômicas</title>
+<meta name="description" content="O BORA-APP verifica o risco das atividades econômicas cruzando legislação federal e municipal nos municípios brasileiros.">
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090c;--bg2:#0c1017;--bg3:#0f1520;
+  --s1:#141d28;--s2:#1a2535;--s3:#1f2d3d;
+  --b0:rgba(255,255,255,0.05);--b1:rgba(255,255,255,0.09);--b2:rgba(255,255,255,0.16);
+  --y:#FFD600;--y2:#e6bf00;--y3:#fff59d;
+  --yd:rgba(255,214,0,0.08);--yg:rgba(255,214,0,0.14);
+  --t:#f0f4f8;--t2:#8a9bac;--t3:#4a5c6c;--t4:#2d3d4d;
+  --gr:#00e5a0;--grd:rgba(0,229,160,0.1);
+  --re:#ff5f5f;--red:rgba(255,95,95,0.1);
+  --bl:#3b9eff;--bld:rgba(59,158,255,0.1);
+  --r:16px;--rl:24px;--rxl:32px;
+  --sh:0 4px 24px rgba(0,0,0,0.35);--shl:0 12px 48px rgba(0,0,0,0.5);
+  --fd:"Bebas Neue",sans-serif;--fh:"Syne",sans-serif;--fm:"DM Mono",monospace;--fb:"Inter",sans-serif;
+  --nh:68px;
+}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--t);font-family:var(--fb);line-height:1.6;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;outline:none}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--s3);border-radius:3px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 1.75rem}
+.lbl{font-family:var(--fm);font-size:0.68rem;color:var(--y);letter-spacing:0.14em;text-transform:uppercase;display:flex;align-items:center;gap:0.4rem}
+.lbl::before{content:"//"}
+h2.dsp{font-family:var(--fd);font-size:clamp(2.6rem,4.5vw,4rem);font-weight:400;line-height:0.95;letter-spacing:0.02em}
+h2.dsp em{font-style:normal;color:var(--y)}
+.lead{font-size:0.95rem;color:var(--t2);line-height:1.75;font-weight:300}
+.btn{display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.6rem;border-radius:var(--r);font-size:0.875rem;font-weight:600;font-family:var(--fb);transition:all 0.2s;cursor:pointer}
+.btn-y{background:var(--y);color:#000}
+.btn-y:hover{background:var(--y3);transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,214,0,0.3)}
+.btn-o{background:transparent;color:var(--t);border:1px solid var(--b1)}
+.btn-o:hover{border-color:var(--y);background:var(--yd);color:var(--y)}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.75)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* ─── NAV ─── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nh);display:flex;align-items:center;background:rgba(7,9,12,0.8);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--b0);transition:border-color 0.3s}
+.nav-i{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1240px;margin:0 auto;padding:0 1.75rem}
+.nav-logo{display:flex;align-items:center;gap:0.65rem}
+.nav-logo img{width:34px;height:34px;object-fit:contain;border-radius:7px}
+.nav-name{font-family:var(--fh);font-size:1rem;font-weight:800;letter-spacing:-0.02em}
+.nav-name span{color:var(--y)}
+.nav-links{display:flex;align-items:center;gap:0.15rem}
+.nav-links a{font-size:0.82rem;color:var(--t2);padding:0.4rem 0.8rem;border-radius:6px;transition:all 0.2s}
+.nav-links a:hover{color:var(--t);background:var(--b0)}
+.nav-right{display:flex;align-items:center;gap:0.65rem}
+.ham{display:none;flex-direction:column;gap:5px;padding:7px;cursor:pointer;background:none;border:none}
+.ham span{display:block;width:20px;height:1.5px;background:var(--t2);border-radius:2px;transition:all 0.3s}
+.mob-nav{display:none;position:fixed;top:var(--nh);left:0;right:0;background:var(--bg2);border-bottom:1px solid var(--b1);padding:1rem 1.75rem;z-index:199}
+.mob-nav a{display:block;padding:0.7rem 0;font-size:0.875rem;color:var(--t2);border-bottom:1px solid var(--b0)}
+.mob-nav a:last-child{border:none}
+.mob-nav.open{display:block}
+
+/* ─── HERO BENTO ─── */
+.hero{padding:calc(var(--nh) + 3rem) 0 4rem;min-height:100vh;display:flex;align-items:center}
+.bento{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:auto auto auto;gap:1rem;width:100%}
+
+/* Bento card base */
+.bc{background:var(--s1);border:1px solid var(--b0);border-radius:var(--rl);padding:1.75rem;transition:transform 0.25s,border-color 0.25s,box-shadow 0.25s;position:relative;overflow:hidden}
+.bc:hover{transform:translateY(-3px);border-color:var(--b1);box-shadow:var(--shl)}
+.bc-yellow{background:var(--y);border-color:var(--y)}
+.bc-yellow:hover{background:var(--y3);border-color:var(--y3)}
+.bc-accent{background:var(--yd);border-color:var(--yg)}
+.bc-glow::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 70% 30%,var(--yg) 0%,transparent 60%);pointer-events:none}
+
+/* Card placements */
+.bc-headline{grid-column:span 2;grid-row:1}
+.bc-app-icon{grid-column:3;grid-row:1}
+.bc-stat1{grid-column:1;grid-row:2}
+.bc-mockup{grid-column:2;grid-row:2;padding:1.25rem}
+.bc-features{grid-column:3;grid-row:2}
+.bc-stores{grid-column:span 2;grid-row:3}
+.bc-cta{grid-column:3;grid-row:3}
+
+/* Headline card */
+.bc-headline .hero-badge{display:inline-flex;align-items:center;gap:0.45rem;background:rgba(255,214,0,0.1);border:1px solid rgba(255,214,0,0.2);padding:0.25rem 0.75rem;border-radius:100px;font-family:var(--fm);font-size:0.62rem;color:var(--y);margin-bottom:1.25rem;letter-spacing:0.08em;text-transform:uppercase}
+.pdot{width:5px;height:5px;background:var(--y);border-radius:50%;animation:pulse 2s infinite;flex-shrink:0}
+.hero-h1{font-family:var(--fd);font-size:clamp(3.5rem,6.5vw,6rem);line-height:0.92;letter-spacing:0.02em;margin-bottom:1.25rem}
+.hero-h1 em{font-style:normal;color:var(--y)}
+.hero-h1 .dim{color:var(--t3)}
+.hero-sub{font-size:0.95rem;color:var(--t2);line-height:1.75;max-width:480px;font-weight:300}
+
+/* App icon card */
+.bc-app-icon{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;text-align:center}
+.bc-app-icon img{width:100px;height:100px;object-fit:contain;border-radius:20px}
+.app-name{font-family:var(--fh);font-size:0.95rem;font-weight:800}
+.app-name span{color:var(--y)}
+.app-tag{font-family:var(--fm);font-size:0.6rem;color:var(--t3);letter-spacing:0.1em;text-transform:uppercase}
+.live-badge{display:inline-flex;align-items:center;gap:0.4rem;background:var(--grd);border:1px solid rgba(0,229,160,0.2);border-radius:100px;padding:0.22rem 0.65rem;font-family:var(--fm);font-size:0.58rem;color:var(--gr);letter-spacing:0.06em}
+.live-dot{width:5px;height:5px;background:var(--gr);border-radius:50%;animation:pulse 2s infinite}
+
+/* Stat card */
+.bc-stat1{display:flex;flex-direction:column;justify-content:space-between;min-height:180px}
+.bc-stat1.bc-yellow .sn{font-family:var(--fd);font-size:3.5rem;line-height:1;color:#000}
+.bc-stat1.bc-yellow .sl{font-family:var(--fm);font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.55)}
+.bc-stat1.bc-yellow .si{font-size:0.8rem;font-weight:600;color:#000;max-width:140px;line-height:1.4}
+.bc-stat1 .sn{font-family:var(--fd);font-size:3.5rem;line-height:1;color:var(--y)}
+.bc-stat1 .sl{font-family:var(--fm);font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--t3)}
+.bc-stat1 .si{font-size:0.8rem;color:var(--t2);max-width:140px;line-height:1.4}
+
+/* Phone mockup */
+.phone-w{display:flex;justify-content:center;align-items:center;height:100%}
+.phone{width:200px;background:var(--bg3);border:1px solid var(--b1);border-radius:24px;overflow:hidden;box-shadow:var(--shl),inset 0 1px 0 rgba(255,255,255,0.06)}
+.ph-notch{height:24px;background:var(--bg2);display:flex;align-items:center;justify-content:center}
+.ph-notch-i{width:60px;height:10px;background:var(--bg);border-radius:100px}
+.ph-body{padding:0.85rem}
+.ph-hdr{display:flex;align-items:center;gap:0.4rem;margin-bottom:0.75rem}
+.ph-logo img{width:20px;height:20px;object-fit:contain;border-radius:4px}
+.ph-ttl{font-size:0.62rem;font-weight:700;font-family:var(--fh)}
+.ph-sub{font-size:0.5rem;color:var(--t3);font-family:var(--fm)}
+.ph-srch{display:flex;align-items:center;gap:0.35rem;background:var(--bg2);border:1px solid var(--b1);border-radius:6px;padding:0.45rem 0.55rem;margin-bottom:0.7rem}
+.ph-stxt{font-family:var(--fm);font-size:0.58rem;color:var(--t2);flex:1}
+.ph-cur{width:1px;height:9px;background:var(--y);animation:blink 1s infinite}
+.ph-lbl{font-family:var(--fm);font-size:0.48rem;color:var(--t4);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.35rem}
+.ph-row{display:flex;align-items:center;justify-content:space-between;padding:0.4rem 0.35rem;background:var(--bg2);border:1px solid var(--b0);border-radius:5px;margin-bottom:0.3rem}
+.ph-cnae{font-family:var(--fm);font-size:0.48rem;color:var(--t3)}
+.ph-nm{font-size:0.56rem;color:var(--t);font-weight:500;max-width:105px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.chip{padding:0.14rem 0.4rem;border-radius:100px;font-size:0.46rem;font-family:var(--fm);font-weight:500}
+.chip-g{background:var(--grd);color:var(--gr);border:1px solid rgba(0,229,160,0.18)}
+.chip-y{background:rgba(255,214,0,0.1);color:var(--y);border:1px solid rgba(255,214,0,0.18)}
+.chip-r{background:var(--red);color:var(--re);border:1px solid rgba(255,95,95,0.18)}
+.ph-ft{margin-top:0.6rem;padding:0.45rem 0.55rem;background:var(--yd);border:1px solid var(--yg);border-radius:5px;display:flex;align-items:center;gap:0.35rem;font-family:var(--fm);font-size:0.5rem;color:var(--y)}
+.ph-bar{height:14px;background:var(--bg2);display:flex;align-items:center;justify-content:center}
+.ph-bar-i{width:44px;height:3px;background:var(--b1);border-radius:2px}
+
+/* Features mini card */
+.bc-features{display:flex;flex-direction:column;gap:0.75rem}
+.bc-features .ftitle{font-family:var(--fh);font-size:0.8rem;font-weight:700;color:var(--t);margin-bottom:0.25rem}
+.feat-row{display:flex;align-items:flex-start;gap:0.6rem;padding:0.65rem 0.75rem;background:var(--bg2);border:1px solid var(--b0);border-radius:10px}
+.feat-ic{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--yd)}
+.feat-txt{font-size:0.75rem;color:var(--t2);line-height:1.4}
+.feat-txt strong{color:var(--t);display:block;font-size:0.78rem;margin-bottom:0.1rem}
+
+/* Store badges card */
+.bc-stores{display:flex;align-items:center;gap:1.5rem}
+.bc-stores .stitle{font-family:var(--fd);font-size:2rem;line-height:1;color:var(--t);flex:1}
+.bc-stores .stitle span{color:var(--y)}
+.store-btns{display:flex;gap:0.65rem;flex-wrap:wrap}
+.sbadge{display:inline-flex;align-items:center;gap:0.6rem;background:var(--bg2);border:1px solid var(--b1);border-radius:10px;padding:0.6rem 1rem;cursor:pointer;transition:all 0.2s}
+.sbadge:hover{border-color:var(--y);transform:translateY(-2px);background:var(--s2)}
+.sbadge .st .sm{font-size:0.58rem;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:0.06em;display:block}
+.sbadge .st .lg{font-size:0.82rem;color:var(--t);font-weight:500;line-height:1.2}
+
+/* CTA card */
+.bc-cta{background:var(--s2);display:flex;flex-direction:column;justify-content:space-between;gap:1.25rem}
+.bc-cta .ctxt{font-size:0.88rem;color:var(--t2);line-height:1.65}
+.stats-mini{display:flex;flex-direction:column;gap:0.5rem}
+.sm-row{display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--b0)}
+.sm-row:last-child{border:none}
+.sm-label{font-size:0.72rem;color:var(--t3);font-family:var(--fm)}
+.sm-val{font-family:var(--fd);font-size:1.2rem;color:var(--y);line-height:1}
+
+/* ─── SECTIONS COMMON ─── */
+section{padding:6rem 0}
+.sec-alt{background:var(--bg2)}
+
+/* ─── PARA QUEM ─── */
+.aud-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 -1.75rem;padding:0 1.75rem}
+.aud-wrap::-webkit-scrollbar{display:none}
+.aud-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-top:3rem}
+.aud-card{background:var(--s1);border:1px solid var(--b0);border-radius:var(--rl);overflow:hidden;transition:all 0.25s;display:flex;flex-direction:column;gap:0;min-width:220px}
+.aud-card:hover{border-color:rgba(255,214,0,0.22);transform:translateY(-4px);box-shadow:var(--shl)}
+.aud-photo{width:100%;height:148px;object-fit:cover;display:block;filter:grayscale(20%)}
+.aud-body{padding:1.25rem 1.2rem;display:flex;flex-direction:column;gap:0.7rem;flex:1}
+.aud-ic{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.aud-card h3{font-family:var(--fh);font-size:0.95rem;font-weight:700}
+.aud-card p{font-size:0.78rem;color:var(--t2);line-height:1.65}
+
+/* ─── COMO FUNCIONA ─── */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:4rem;position:relative}
+.steps::before{content:"";position:absolute;top:28px;left:calc(16.67% + 0.5rem);right:calc(16.67% + 0.5rem);height:1px;background:linear-gradient(90deg,transparent 0%,var(--b1) 15%,var(--b1) 85%,transparent 100%);z-index:0}
+.step{padding:2rem 1.5rem;background:var(--s1);border:1px solid var(--b0);border-radius:var(--rl);margin:0 0.5rem;transition:all 0.25s;position:relative;z-index:1}
+.step:first-child{margin-left:0}
+.step:last-child{margin-right:0}
+.step:hover{border-color:rgba(255,214,0,0.22);transform:translateY(-3px)}
+.step-n{width:40px;height:40px;border-radius:50%;background:var(--yd);border:1px solid rgba(255,214,0,0.2);display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:0.72rem;color:var(--y);margin-bottom:1.5rem}
+.step h3{font-family:var(--fh);font-size:1rem;font-weight:700;margin-bottom:0.6rem}
+.step p{font-size:0.83rem;color:var(--t2);line-height:1.65}
+.step-ex{margin-top:1rem;padding:0.75rem;background:var(--bg3);border-radius:8px;font-family:var(--fm);font-size:0.67rem;color:var(--t3)}
+.step-ex strong{color:var(--y)}
+
+/* ─── SOBRE ─── */
+.sobre-g{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.sobre-vis{display:flex;flex-direction:column;gap:1.25rem}
+.logo-card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);padding:2rem;display:flex;align-items:center;justify-content:center}
+.logo-card img{width:155px;height:155px;object-fit:contain;border-radius:14px}
+.ep-card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);padding:1.4rem 1.75rem;display:flex;align-items:center;gap:1.1rem}
+.ep-card img{width:64px;height:64px;object-fit:contain;filter:invert(1);border-radius:50%;border:3px solid #000;background:#000;padding:4px;box-shadow:0 0 0 1px rgba(255,255,255,0.12);flex-shrink:0}
+.ep-info strong{font-family:var(--fh);font-size:0.95rem;font-weight:700;display:block;margin-bottom:0.18rem}
+.ep-info span{font-size:0.72rem;color:var(--t3);font-family:var(--fm)}
+.num-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.85rem}
+.num-card{background:var(--s1);border:1px solid var(--b0);border-radius:10px;padding:0.9rem;text-align:center}
+.num-card .n{font-family:var(--fd);font-size:1.65rem;color:var(--y);line-height:1}
+.num-card .l{font-size:0.6rem;color:var(--t3);font-family:var(--fm);margin-top:0.25rem;text-transform:uppercase;letter-spacing:0.06em}
+.sobre-txt .lead{margin-top:1rem;margin-bottom:1.5rem}
+.stags{display:flex;flex-wrap:wrap;gap:0.45rem;margin-bottom:1.75rem}
+.stag{display:inline-flex;align-items:center;gap:0.35rem;background:var(--s1);border:1px solid var(--b0);border-radius:6px;padding:0.38rem 0.7rem;font-size:0.72rem;color:var(--t2);font-family:var(--fm)}
+.stag strong{color:var(--y)}
+
+/* ─── PARCEIRO ─── */
+.parc-g{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.parc-info .lead{margin-top:1rem;margin-bottom:2.5rem}
+.parc-list{display:flex;flex-direction:column;gap:0.65rem}
+.parc-item{background:var(--s1);border:1px solid var(--b0);border-radius:10px;padding:0.9rem 1.1rem;display:flex;align-items:center;gap:0.8rem;transition:border-color 0.2s}
+.parc-item:hover{border-color:rgba(255,214,0,0.18)}
+.pic{width:34px;height:34px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pitxt h4{font-size:0.82rem;font-weight:600;font-family:var(--fh);color:var(--y);margin-bottom:0.1rem}
+.pitxt p{font-size:0.75rem;color:var(--t2)}
+.form-c{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rxl);padding:2.25rem}
+.form-c h3{font-family:var(--fh);font-size:1.15rem;font-weight:700;margin-bottom:0.35rem}
+.form-c .sub{font-size:0.8rem;color:var(--t2);margin-bottom:1.75rem}
+.fg{margin-bottom:1.1rem}
+.fg label{display:block;font-size:0.72rem;color:var(--t2);margin-bottom:0.35rem;font-family:var(--fm)}
+.fc{width:100%;background:var(--bg3);border:1px solid var(--b1);border-radius:var(--r);padding:0.75rem 0.9rem;font-family:var(--fb);font-size:0.85rem;color:var(--t);outline:none;transition:border-color 0.2s;-webkit-appearance:none;appearance:none}
+.fc::placeholder{color:var(--t3)}
+.fc:focus{border-color:var(--y)}
+textarea.fc{resize:vertical;min-height:90px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:0.85rem}
+.fn{font-size:0.68rem;color:var(--t3);margin-top:0.85rem;text-align:center}
+
+/* ─── FOOTER ─── */
+footer{background:var(--bg);border-top:1px solid var(--b0);padding:2.75rem 0 1.75rem}
+.footer-g{display:grid;grid-template-columns:1fr auto auto;gap:2.5rem;align-items:start;margin-bottom:2rem}
+.fbrand p{font-size:0.78rem;color:var(--t3);max-width:265px;line-height:1.6;margin-top:0.65rem}
+.fep{display:flex;align-items:center;gap:0.45rem;margin-top:1rem}
+.fep img{width:22px;height:22px;object-fit:contain;filter:invert(1);border-radius:50%;border:2px solid #000;background:#000;padding:2px;opacity:0.7}
+.fep span{font-size:0.7rem;color:var(--t3);font-family:var(--fm)}
+.fcol h4{font-family:var(--fm);font-size:0.6rem;color:var(--t4);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.9rem}
+.fcol a{display:block;font-size:0.8rem;color:var(--t2);margin-bottom:0.45rem;transition:color 0.2s}
+.fcol a:hover{color:var(--t)}
+.footer-b{display:flex;align-items:center;justify-content:space-between;padding-top:1.75rem;border-top:1px solid var(--b0)}
+.fcopy{font-size:0.72rem;color:var(--t3)}
+.flinks{display:flex;gap:1.25rem}
+.flinks a{font-size:0.72rem;color:var(--t3);transition:color 0.2s}
+.flinks a:hover{color:var(--t2)}
+
+/* ─── REVEAL ─── */
+.rv{opacity:0;transform:translateY(24px);transition:opacity 0.6s ease,transform 0.6s ease}
+.rv.on{opacity:1;transform:none}
+.d1{transition-delay:0.08s}.d2{transition-delay:0.16s}.d3{transition-delay:0.24s}.d4{transition-delay:0.32s}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:1024px){
+  .bento{grid-template-columns:repeat(2,1fr)}
+  .bc-headline{grid-column:span 2;grid-row:auto}
+  .bc-app-icon{grid-column:1;grid-row:auto}
+  .bc-stat1{grid-column:2;grid-row:auto}
+  .bc-mockup{grid-column:1;grid-row:auto}
+  .bc-features{grid-column:2;grid-row:auto}
+  .bc-stores{grid-column:span 2;grid-row:auto}
+  .bc-cta{grid-column:span 2;grid-row:auto}
+  .aud-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:900px){
+  .nav-links,.nav-right{display:none}
+  .ham{display:flex}
+  .sobre-g,.parc-g{grid-template-columns:1fr;gap:2.5rem}
+  .sobre-vis{order:-1}
+  .steps{grid-template-columns:1fr;gap:1rem}
+  .steps::before{display:none}
+  .step{margin:0}
+  .footer-g{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .wrap{padding:0 1rem}
+  .hero{padding:calc(var(--nh) + 2rem) 0 2.5rem}
+  section{padding:4.5rem 0}
+  .bento{grid-template-columns:1fr}
+  .bc-headline,.bc-stores,.bc-cta{grid-column:1}
+  .bc-app-icon,.bc-stat1,.bc-mockup,.bc-features{grid-column:1}
+  .aud-grid{grid-template-columns:repeat(2,1fr);width:100%}
+  .fr{grid-template-columns:1fr}
+  h2.dsp{font-size:clamp(2rem,7vw,2.8rem)}
+  .bc-stores{flex-direction:column;align-items:flex-start;gap:1rem}
+  .num-grid{grid-template-columns:repeat(3,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mn">
+  <div class="nav-i">
+    <a href="#" class="nav-logo">
+      <img src="icon.png" alt="BORA-APP">
+      <div class="nav-name">BORA<span>.</span>APP</div>
+    </a>
+    <div class="nav-links">
+      <a href="#funcionalidades">Funcionalidades</a>
+      <a href="#para-quem">Para Quem</a>
+      <a href="#como-funciona">Como Funciona</a>
+      <a href="#sobre">Sobre</a>
+      <a href="#parceiro">Parceiro</a>
+    </div>
+    <div class="nav-right">
+      <a href="#parceiro" class="btn btn-y" style="padding:0.5rem 1.1rem;font-size:0.8rem">Contato</a>
+    </div>
+    <button class="ham" id="ham" aria-label="Abrir menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mob-nav" id="mob">
+  <a href="#funcionalidades">Funcionalidades</a>
+  <a href="#para-quem">Para Quem</a>
+  <a href="#como-funciona">Como Funciona</a>
+  <a href="#sobre">Sobre</a>
+  <a href="#parceiro">Parceiro / Contato</a>
+</div>
+
+<!-- HERO BENTO -->
+<section class="hero">
+  <div class="wrap" style="width:100%">
+    <div class="bento rv on">
+
+      <!-- Headline card -->
+      <div class="bc bc-headline bc-glow">
+        <div class="hero-badge">
+          <span class="pdot" aria-hidden="true"></span>
+          Em breve &mdash; Acesso antecipado disponível
+        </div>
+        <h1 class="hero-h1">
+          VERIFIQUE<br>O <em>RISCO</em><br><span class="dim">DA ATIVIDADE</span>
+        </h1>
+        <p class="hero-sub">O BORA-APP cruza a legislação federal e municipal para verificar o risco das atividades econômicas — nossa missão é cobrir os 5.570 municípios brasileiros.</p>
+      </div>
+
+      <!-- App icon card -->
+      <div class="bc bc-app-icon">
+        <img src="icon.png" alt="BORA-APP ícone">
+        <div>
+          <div class="app-name">BORA<span>.</span>APP</div>
+          <div class="app-tag">CNAE vs Município</div>
+        </div>
+        <div class="live-badge"><span class="live-dot" aria-hidden="true"></span>Em desenvolvimento</div>
+      </div>
+
+      <!-- Stat card — yellow -->
+      <div class="bc bc-stat1 bc-yellow">
+        <div>
+          <div class="sn">5.570</div>
+          <div class="sl">Municípios</div>
+        </div>
+        <div class="si">Nossa missão: cobertura total do território brasileiro.</div>
+      </div>
+
+      <!-- App em desenvolvimento card -->
+      <div class="bc bc-mockup" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.25rem;text-align:center">
+        <div style="width:64px;height:64px;border-radius:16px;background:var(--yd);border:1px solid var(--yg);display:flex;align-items:center;justify-content:center">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--y)" stroke-width="1.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18" stroke-width="2"/></svg>
+        </div>
+        <div>
+          <div style="font-family:var(--fh);font-size:0.95rem;font-weight:700;margin-bottom:0.35rem">App em desenvolvimento</div>
+          <div style="font-size:0.75rem;color:var(--t3);line-height:1.55">O layout do aplicativo<br>está sendo finalizado.</div>
+        </div>
+        <div class="live-badge" style="background:rgba(255,214,0,0.08);border-color:rgba(255,214,0,0.18)">
+          <span style="width:5px;height:5px;background:var(--y);border-radius:50%;animation:pulse 2s infinite;flex-shrink:0" aria-hidden="true"></span>
+          Em breve
+        </div>
+      </div>
+
+      <!-- Features mini card -->
+      <div class="bc bc-features">
+        <div class="ftitle">// Funcionalidades</div>
+        <div class="feat-row">
+          <div class="feat-ic" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--y)" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          </div>
+          <div class="feat-txt"><strong>Busca por CNAE</strong>Pesquise por código ou nome da atividade</div>
+        </div>
+        <div class="feat-row">
+          <div class="feat-ic" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--y)" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div class="feat-txt"><strong>Baixo / Médio / Alto</strong>Verificação do risco em 3 níveis</div>
+        </div>
+        <div class="feat-row">
+          <div class="feat-ic" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--y)" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          </div>
+          <div class="feat-txt"><strong>Sempre atualizado</strong>Base de dados em atualização contínua</div>
+        </div>
+      </div>
+
+      <!-- Store badges card -->
+      <div class="bc bc-stores">
+        <div class="stitle">BAIXE O<br><span>APP</span> AGORA</div>
+        <div class="store-btns">
+          <div class="sbadge" role="button" tabindex="0" aria-label="Baixar na App Store">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="color:var(--t);opacity:0.85" aria-hidden="true"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+            <div class="st"><span class="sm">Baixar na</span><span class="lg">App Store</span></div>
+          </div>
+          <div class="sbadge" role="button" tabindex="0" aria-label="Disponível no Google Play">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="color:var(--t);opacity:0.85" aria-hidden="true"><path d="M3.18 23.76c.3.17.64.22.99.14l12.12-6.99-2.54-2.54-10.57 9.39zM.69 1.31C.27 1.72 0 2.35 0 3.18v17.64c0 .83.27 1.46.69 1.87l.1.09 9.88-9.88v-.23L.79 1.22l-.1.09zm18.36 8.08-2.73-1.58-2.84 2.84 2.84 2.84 2.76-1.59c.79-.45.79-1.19-.03-1.51zM4.17.24l12.12 6.99-2.54 2.54L4.17.24z"/></svg>
+            <div class="st"><span class="sm">Disponível no</span><span class="lg">Google Play</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA card -->
+      <div class="bc bc-cta">
+        <div>
+          <div class="lbl" style="margin-bottom:0.5rem">Acesso antecipado</div>
+          <p class="ctxt">Cadastre-se e seja avisado quando o BORA-APP for lançado.</p>
+        </div>
+        <div class="stats-mini">
+          <div class="sm-row"><span class="sm-label">Municípios</span><span class="sm-val">5.570</span></div>
+          <div class="sm-row"><span class="sm-label">CNAEs</span><span class="sm-val">1.300+</span></div>
+          <div class="sm-row"><span class="sm-label">Níveis de risco</span><span class="sm-val">3</span></div>
+        </div>
+        <a href="#parceiro" class="btn btn-y" style="width:100%;justify-content:center">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Entrar em Contato
+        </a>
+      </div>
+
+    </div><!-- /bento -->
+  </div>
+</section>
+
+<!-- PARA QUEM -->
+<section id="para-quem" class="sec-alt">
+  <div class="wrap">
+    <div class="rv">
+      <div class="lbl">Para Quem</div>
+      <h2 class="dsp" style="margin-top:0.5rem">FEITO PARA QUEM<br>PRECISA DE <em>CLAREZA</em></h2>
+      <p class="lead" style="margin-top:1rem;max-width:500px">Profissionais e empresas que lidam diariamente com abertura de negócios, alvarás e compliance regulatório.</p>
+    </div>
+    <div class="aud-wrap">
+      <div class="aud-grid">
+        <div class="aud-card rv d1">
+          <img class="aud-photo" src="https://images.unsplash.com/photo-1560472355-536de3962603?w=420&h=200&fit=crop&auto=format" alt="Empresário analisando documentos">
+          <div class="aud-body">
+            <div class="aud-ic" style="background:rgba(255,214,0,0.1)" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--y)" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            </div>
+            <h3>Empresários</h3>
+            <p>Verifique o risco regulatório antes de abrir ou expandir seu negócio. Evite surpresas na obtenção de alvarás.</p>
+          </div>
+        </div>
+        <div class="aud-card rv d2">
+          <img class="aud-photo" src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=420&h=200&fit=crop&auto=format" alt="Contador em escritório">
+          <div class="aud-body">
+            <div class="aud-ic" style="background:var(--bld)" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--bl)" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+            </div>
+            <h3>Contadores</h3>
+            <p>Oriente seus clientes com precisão sobre o enquadramento regulatório em qualquer município do Brasil.</p>
+          </div>
+        </div>
+        <div class="aud-card rv d3">
+          <img class="aud-photo" src="https://images.unsplash.com/photo-1568992688065-536aad8a12f6?w=420&h=200&fit=crop&auto=format" alt="Prefeitura e governo municipal">
+          <div class="aud-body">
+            <div class="aud-ic" style="background:var(--grd)" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gr)" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <h3>Prefeituras</h3>
+            <p>Ferramenta de apoio para servidores municipais verificarem o risco regulatório das atividades econômicas locais.</p>
+          </div>
+        </div>
+        <div class="aud-card rv d4">
+          <img class="aud-photo" src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=420&h=200&fit=crop&auto=format" alt="Advogado em escritório">
+          <div class="aud-body">
+            <div class="aud-ic" style="background:var(--red)" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--re)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3>Advogados</h3>
+            <p>Due diligence regulatória, assessoria na abertura de empresas e consultoria sobre compliance municipal.</p>
+          </div>
+        </div>
+        <div class="aud-card rv d4">
+          <img class="aud-photo" src="https://images.unsplash.com/photo-1521791136064-7986c2920216?w=420&h=200&fit=crop&auto=format" alt="Fiscal em vistoria">
+          <div class="aud-body">
+            <div class="aud-ic" style="background:rgba(255,150,0,0.12)" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF9600" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            </div>
+            <h3>Fiscais</h3>
+            <p>Consulta rápida em campo sobre o enquadramento de risco das atividades durante vistorias e autuações.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section id="como-funciona" id="funcionalidades">
+  <div class="wrap">
+    <div class="rv" style="text-align:center">
+      <div class="lbl" style="justify-content:center">Como Funciona</div>
+      <h2 class="dsp" style="margin-top:0.5rem">3 PASSOS PARA A<br><em>RESPOSTA</em> CERTA</h2>
+      <p class="lead" style="margin:0.85rem auto 0;text-align:center">Simples, rápido e sem burocracia.</p>
+    </div>
+    <div class="steps">
+      <div class="step rv d1">
+        <div class="step-n" aria-hidden="true">01</div>
+        <h3>Busque a Atividade</h3>
+        <p>Digite o código CNAE ou o nome da atividade. Selecione o estado e município desejado.</p>
+        <div class="step-ex">Ex: <strong>47.81-4-00</strong> — Comércio ambulante e outros tipos de comércio varejista</div>
+      </div>
+      <div class="step rv d2">
+        <div class="step-n" aria-hidden="true">02</div>
+        <h3>Veja o Resultado</h3>
+        <p>O app exibe o nível de risco verificado: <strong style="color:var(--gr)">Baixo</strong>, <strong style="color:var(--y)">Médio</strong> ou <strong style="color:var(--re)">Alto</strong>, com base nas normas vigentes.</p>
+        <div class="step-ex">Combinação de legislação <strong>federal</strong> + normas do <strong>município</strong></div>
+      </div>
+      <div class="step rv d3">
+        <div class="step-n" aria-hidden="true">03</div>
+        <h3>Entenda a Legislação</h3>
+        <p>Acesse o detalhamento das normas aplicáveis, requisitos de licenciamento e documentos necessários.</p>
+        <div class="step-ex">Referências a <strong>CONAMA</strong>, <strong>ANVISA</strong> e leis municipais</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOBRE -->
+<section id="sobre" class="sec-alt">
+  <div class="wrap">
+    <div class="sobre-g">
+      <div class="sobre-vis rv">
+        <div class="logo-card">
+          <img src="icon.png" alt="BORA-APP logotipo" style="border-radius:14px">
+        </div>
+        <div class="ep-card">
+          <img src="enjoypineapple.jpeg" alt="Enjoy Pineapple logotipo">
+          <div class="ep-info">
+            <strong>Enjoy Pineapple</strong>
+            <span>Startup Brasileira</span>
+          </div>
+        </div>
+        <div class="num-grid">
+          <div class="num-card"><div class="n">5.570</div><div class="l">Municípios</div></div>
+          <div class="num-card"><div class="n">100%</div><div class="l">Brasileiro</div></div>
+          <div class="num-card"><div class="n">2024</div><div class="l">Fundação</div></div>
+        </div>
+      </div>
+      <div class="sobre-txt rv d2">
+        <div class="lbl">Sobre a Empresa</div>
+        <h2 class="dsp" style="margin-top:0.5rem">UMA SOLUÇÃO <em>BRASILEIRA</em> PARA UM PROBLEMA BRASILEIRO</h2>
+        <p class="lead">O BORA-APP é desenvolvido pela <strong style="color:var(--t)">Enjoy Pineapple</strong>, startup comprometida em simplificar a verificação do risco regulatório para cidadãos e empresários em todo o Brasil.</p>
+        <p style="font-size:0.875rem;color:var(--t2);line-height:1.75;margin-bottom:1.75rem">Com 5.570 municípios, cada um com poder legislativo próprio, verificar o risco de uma atividade econômica é um desafio diário para milhões de pessoas. Nossa missão é ter cobertura total do território brasileiro — e estamos construindo isso município a município.</p>
+        <div class="stags">
+          <span class="stag"><strong>01</strong> Legislação Ambiental</span>
+          <span class="stag"><strong>02</strong> Vigilância Sanitária</span>
+          <span class="stag"><strong>03</strong> Federal + Municipal</span>
+          <span class="stag"><strong>04</strong> Atualização Contínua</span>
+        </div>
+        <a href="#parceiro" class="btn btn-o">Seja um Parceiro</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARCEIRO / CONTATO -->
+<section id="parceiro">
+  <div class="wrap">
+    <div class="parc-g">
+      <div class="parc-info rv">
+        <div class="lbl">Parceiro / Contato</div>
+        <h2 class="dsp" style="margin-top:0.5rem">VAMOS <em>CRESCER</em><br>JUNTOS</h2>
+        <p class="lead">Seja você um contador, desenvolvedor, prefeitura ou empresa — há espaço para colaborar com o BORA-APP.</p>
+        <div class="parc-list" style="margin-top:2.25rem">
+          <div class="parc-item">
+            <div class="pic" style="background:rgba(255,214,0,0.1)" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--y)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="pitxt"><h4>Parceiro Comercial</h4><p>Revenda ou integre o BORA-APP na sua solução</p></div>
+          </div>
+          <div class="parc-item">
+            <div class="pic" style="background:var(--bld)" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--bl)" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 2 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+            </div>
+            <div class="pitxt"><h4>Integração / API</h4><p>Conecte sistemas contábeis e municipais</p></div>
+          </div>
+          <div class="parc-item">
+            <div class="pic" style="background:var(--grd)" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gr)" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            </div>
+            <div class="pitxt"><h4>Prefeituras e Órgãos</h4><p>Solução white-label para gestão municipal</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="form-c rv d2">
+        <h3>Entre em Contato</h3>
+        <p class="sub">Nossa equipe responderá em até 48 horas.</p>
+        <form id="cform" novalidate>
+          <div class="fr">
+            <div class="fg">
+              <label for="fn">Nome completo</label>
+              <input class="fc" type="text" id="fn" name="nome" placeholder="Seu nome" required>
+            </div>
+            <div class="fg">
+              <label for="fe2">Empresa</label>
+              <input class="fc" type="text" id="fe2" name="empresa" placeholder="Sua empresa">
+            </div>
+          </div>
+          <div class="fg">
+            <label for="fem">E-mail profissional</label>
+            <input class="fc" type="email" id="fem" name="email" placeholder="voce@empresa.com.br" required>
+          </div>
+          <div class="fg">
+            <label for="ftp">Tipo de interesse</label>
+            <select class="fc" id="ftp" name="perfil" required>
+              <option value="" disabled selected>Selecione uma opção</option>
+              <option>Parceiro Comercial</option>
+              <option>Integração de Dados / API</option>
+              <option>Prefeitura / Órgão Público</option>
+              <option>Escritório de Contabilidade</option>
+              <option>Escritório de Advocacia</option>
+              <option>Outro</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label for="fmg">Mensagem</label>
+            <textarea class="fc" id="fmg" name="mensagem" placeholder="Conte um pouco sobre seu interesse..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-y" style="width:100%;justify-content:center" id="fsub">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Enviar Mensagem
+          </button>
+          <p class="fn">Dados tratados conforme nossa <a href="privacidade.html" style="color:var(--t2);text-decoration:underline">Política de Privacidade</a>.</p>
+        </form>
+        <div id="fsuc" style="display:none;text-align:center;padding:2.5rem 0" role="status" aria-live="polite">
+          <div style="width:52px;height:52px;background:var(--grd);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--gr)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div style="font-family:var(--fh);font-size:1.05rem;font-weight:700;margin-bottom:0.4rem">Mensagem enviada!</div>
+          <p style="font-size:0.82rem;color:var(--t2)">Nossa equipe entrará em contato em breve.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="footer-g">
+      <div class="fbrand">
+        <div class="nav-logo">
+          <img src="icon.png" alt="BORA-APP" style="width:30px;height:30px;border-radius:6px">
+          <div class="nav-name" style="font-size:0.95rem">BORA<span>.</span>APP</div>
+        </div>
+        <p>Verificação do risco regulatório de atividades econômicas — missão: cobertura total dos municípios brasileiros.</p>
+        <div class="fep">
+          <img src="enjoypineapple.jpeg" alt="Enjoy Pineapple">
+          <span>by Enjoy Pineapple</span>
+        </div>
+      </div>
+      <div class="fcol">
+        <h4>Produto</h4>
+        <a href="#para-quem">Para Quem</a>
+        <a href="#como-funciona">Como Funciona</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#parceiro">Baixar App</a>
+      </div>
+      <div class="fcol">
+        <h4>Legal &amp; Suporte</h4>
+        <a href="privacidade.html">Política de Privacidade</a>
+        <a href="termos.html">Termos de Uso</a>
+        <a href="suporte.html">Suporte</a>
+        <a href="#parceiro">Contato</a>
+      </div>
+    </div>
+    <div class="footer-b">
+      <span class="fcopy">&copy; 2025 Enjoy Pineapple. Todos os direitos reservados.</span>
+      <div class="flinks">
+        <a href="privacidade.html">Privacidade</a>
+        <a href="termos.html">Termos</a>
+        <a href="suporte.html">Suporte</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // Hamburger
+  var hb = document.getElementById('ham'), mob = document.getElementById('mob');
+  hb.addEventListener('click', function(){
+    var o = mob.classList.toggle('open');
+    hb.setAttribute('aria-expanded', String(o));
+    var s = hb.querySelectorAll('span');
+    s[0].style.transform = o ? 'translateY(7px) rotate(45deg)' : '';
+    s[1].style.opacity = o ? '0' : '';
+    s[2].style.transform = o ? 'translateY(-7px) rotate(-45deg)' : '';
+  });
+  mob.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      mob.classList.remove('open');
+      hb.setAttribute('aria-expanded','false');
+      var s = hb.querySelectorAll('span');
+      s[0].style.transform=''; s[1].style.opacity=''; s[2].style.transform='';
+    });
+  });
+
+  // Scroll reveal
+  var rvs = document.querySelectorAll('.rv');
+  if('IntersectionObserver' in window){
+    var ob = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('on'); ob.unobserve(e.target); } });
+    },{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+    rvs.forEach(function(el){ if(!el.classList.contains('on')) ob.observe(el); });
+  } else {
+    rvs.forEach(function(el){ el.classList.add('on'); });
+  }
+
+  // Nav
+  var mn = document.getElementById('mn');
+  window.addEventListener('scroll', function(){
+    mn.style.borderBottomColor = window.scrollY > 30 ? 'rgba(255,255,255,0.09)' : 'rgba(255,255,255,0.05)';
+  },{passive:true});
+
+  // Form
+  var form = document.getElementById('cform'), fsub = document.getElementById('fsub'), fsuc = document.getElementById('fsuc');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var fields = [document.getElementById('fn'), document.getElementById('fem'), document.getElementById('ftp')];
+    var ok = true;
+    fields.forEach(function(el){
+      if(!el.value.trim()){
+        el.style.borderColor='var(--re)';
+        el.addEventListener('input',function(){ el.style.borderColor=''; },{once:true});
+        ok=false;
+      }
+    });
+    if(!ok) return;
+    fsub.disabled=true;
+    fsub.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 0.8s linear infinite" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.22-8.56"/></svg> Enviando...';
+    setTimeout(function(){ form.style.display='none'; fsuc.style.display='block'; },1200);
+  });
+
+  // Store badges keyboard
+  document.querySelectorAll('.sbadge').forEach(function(el){
+    el.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); el.click(); } });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Suporte — BORA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --yellow: #FFD600;
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --border: #222222;
+      --text: #e8e8e8;
+      --muted: #888888;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body: 'Syne', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem; height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { font-family: var(--font-display); font-size: 1.6rem; color: var(--yellow); letter-spacing: 0.06em; text-decoration: none; }
+    .nav-back { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); text-decoration: none; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
+    .nav-back:hover { color: var(--yellow); }
+
+    .page-header { border-bottom: 1px solid var(--border); padding: 4rem 2rem 3rem; max-width: 900px; margin: 0 auto; }
+    .page-tag { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.15em; color: var(--yellow); text-transform: uppercase; margin-bottom: 1rem; }
+    .page-title { font-family: var(--font-display); font-size: clamp(2.5rem, 6vw, 4rem); letter-spacing: 0.04em; line-height: 1; color: #fff; margin-bottom: 1rem; }
+    .page-sub { font-size: 1rem; color: var(--muted); max-width: 520px; }
+
+    .content { max-width: 900px; margin: 0 auto; padding: 3rem 2rem 6rem; }
+
+    /* CONTACT CARDS */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 4rem;
+    }
+    .contact-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2rem;
+      transition: border-color 0.2s;
+    }
+    .contact-card:hover { border-color: var(--yellow); }
+    .card-icon {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      letter-spacing: 0.05em;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+    .card-desc {
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+      line-height: 1.5;
+    }
+    .card-action {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--yellow);
+      text-decoration: none;
+      border: 1px solid rgba(255,214,0,0.3);
+      padding: 0.5rem 1rem;
+      border-radius: 2px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .card-action:hover {
+      background: rgba(255,214,0,0.08);
+      border-color: var(--yellow);
+    }
+
+    /* FAQ */
+    .faq-header {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      letter-spacing: 0.05em;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+    .faq-sub {
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+      font-family: var(--font-mono);
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      padding: 1.25rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .faq-question:hover { color: var(--yellow); }
+    .faq-icon {
+      font-family: var(--font-mono);
+      font-size: 1.2rem;
+      color: var(--yellow);
+      flex-shrink: 0;
+      transition: transform 0.3s;
+      line-height: 1;
+    }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+    }
+    .faq-item.open .faq-answer { max-height: 500px; }
+    .faq-answer-inner {
+      padding-bottom: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .faq-answer-inner a { color: var(--yellow); text-decoration: none; }
+    .faq-answer-inner strong { color: var(--text); }
+
+    /* CATEGORIES */
+    .cat-section { margin-bottom: 3rem; }
+    .cat-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--yellow);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* STATUS */
+    .status-bar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 4rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .status-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+      flex-shrink: 0;
+    }
+    .status-text {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text);
+    }
+    .status-text span { color: var(--muted); }
+
+    p { color: var(--text); margin-bottom: 1rem; font-size: 0.95rem; }
+    strong { color: #fff; font-weight: 600; }
+
+    footer { border-top: 1px solid var(--border); padding: 2rem; text-align: center; }
+    .footer-text { font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); }
+    .footer-text a { color: var(--yellow); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">BORA</a>
+    <a href="index.html" class="nav-back">← Voltar ao início</a>
+  </nav>
+
+  <div class="page-header">
+    <div class="page-tag">// suporte</div>
+    <h1 class="page-title">Central de Suporte</h1>
+    <p class="page-sub">Tem alguma dúvida ou problema? Estamos aqui. Encontre a resposta no FAQ ou fale diretamente com a gente.</p>
+  </div>
+
+  <div class="content">
+
+    <!-- STATUS -->
+    <div class="status-bar">
+      <div class="status-dot"></div>
+      <div class="status-text">
+        Todos os sistemas operacionais &nbsp;·&nbsp; <span>Último verificado: Junho 2026</span>
+      </div>
+    </div>
+
+    <!-- CONTACT OPTIONS -->
+    <div class="contact-grid">
+      <div class="contact-card">
+        <div class="card-icon">✉️</div>
+        <div class="card-title">E-mail</div>
+        <p class="card-desc">Para dúvidas gerais, problemas de conta ou sugestões. Respondemos em até 2 dias úteis.</p>
+        <a href="mailto:suporte@enjoypineapple.com.br" class="card-action">suporte@enjoypineapple.com.br</a>
+      </div>
+
+      <div class="contact-card">
+        <div class="card-icon">🔒</div>
+        <div class="card-title">Privacidade</div>
+        <p class="card-desc">Para exercer seus direitos sob a LGPD: acesso, correção, exclusão de dados ou retirada de consentimento.</p>
+        <a href="mailto:privacidade@enjoypineapple.com.br" class="card-action">privacidade@enjoypineapple.com.br</a>
+      </div>
+
+      <div class="contact-card">
+        <div class="card-icon">🏛️</div>
+        <div class="card-title">Prefeituras</div>
+        <p class="card-desc">Sua cidade quer integrar ao BORA ou atualizar dados de licenciamento? Fale com nosso time de parcerias.</p>
+        <a href="mailto:parcerias@enjoypineapple.com.br" class="card-action">parcerias@enjoypineapple.com.br</a>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="faq-header">Perguntas frequentes</div>
+    <p class="faq-sub">// FAQ — as dúvidas mais comuns dos usuários</p>
+
+    <!-- CONTA -->
+    <div class="cat-section">
+      <div class="cat-label">conta e cadastro</div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          Como crio minha conta no BORA?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Baixe o app na App Store ou Google Play, abra e toque em "Criar conta". Você precisará de um e-mail válido e criará uma senha. Em seguida, o app guiará você por uma configuração rápida de perfil (apelido, município de interesse e profissão).
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          Por que o BORA pede meu CPF?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            O CPF é usado <strong>apenas para verificar unicidade de cadastro</strong> — garantimos que cada pessoa tenha apenas uma conta. <strong>Nunca armazenamos seu número de CPF.</strong> Toda a verificação é feita localmente no seu dispositivo, e apenas um hash criptográfico (SHA-256) irreversível é enviado. Leia mais em nossa <a href="privacidade.html">Política de Privacidade</a>.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          Esqueci minha senha. Como recupero?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Na tela de login, toque em "Esqueci minha senha". Você receberá um e-mail com o link de redefinição. Verifique também a pasta de spam. O link expira em 1 hora.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          Como excluo minha conta?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Acesse o app → Perfil → Configurações → Excluir conta. A exclusão é permanente. Todos os seus dados serão removidos em até 30 dias, conforme nossa <a href="privacidade.html">Política de Privacidade</a>. Se preferir, envie um e-mail para <a href="mailto:suporte@enjoypineapple.com.br">suporte@enjoypineapple.com.br</a> solicitando a exclusão.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- APP -->
+    <div class="cat-section">
+      <div class="cat-label">usando o app</div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          Minha cidade não aparece no BORA. Por quê?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            O BORA expande por município conforme a demanda. <strong>Porto Alegre – RS</strong> é nossa cidade piloto, com dados completos disponíveis. Para outras cidades, precisamos atingir <strong>100 cadastros de usuários do mesmo município</strong> para ativação — só assim garantimos que vale o trabalho de integração da legislação local. Quando sua cidade for ativada, você receberá uma notificação.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          As informações do BORA são oficiais?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Os dados são extraídos de fontes públicas oficiais (CGSIM federal, legislação municipal) e atualizados periodicamente. No entanto, o BORA tem caráter <strong>informativo</strong> — não substitui consulta direta à prefeitura, a um contador ou a um advogado para decisões de negócio específicas. A legislação municipal pode mudar e pode não estar imediatamente refletida no sistema.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          O que significa cada nível de risco (baixo, médio, alto)?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            A classificação segue o modelo da <strong>Rede Nacional para a Simplificação do Registro e da Legalização de Empresas e Negócios (REDESIM)</strong> e do CGSIM federal:
+            <br/><br/>
+            <strong>Baixo risco:</strong> atividade pode ser exercida com registro simplificado, sem necessidade de vistoria prévia.<br/>
+            <strong>Médio risco:</strong> requer licença municipal, com possível vistoria dependendo do município.<br/>
+            <strong>Alto risco:</strong> exige licenças específicas (sanitária, ambiental, bombeiros) antes do início das atividades.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          Como uso o código de indicação?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Seu código de indicação aparece na tela de Perfil. Compartilhe com colegas ou clientes — quando eles se cadastrarem usando seu código ou pelo link com <code style="font-family:var(--font-mono);font-size:0.85em;color:var(--yellow);">?ref=SEUCODIGO</code>, o vínculo é registrado automaticamente. Veja os benefícios do programa dentro do app.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DADOS -->
+    <div class="cat-section">
+      <div class="cat-label">privacidade e dados</div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          Quais dados vocês coletam?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Coletamos apenas o necessário: e-mail, apelido, data de nascimento, município de interesse e profissão. O CPF é validado localmente e nunca armazenado. Consulte a <a href="privacidade.html">Política de Privacidade completa</a> para todos os detalhes.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          Como solicito acesso, correção ou exclusão dos meus dados?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Envie um e-mail para <a href="mailto:privacidade@enjoypineapple.com.br">privacidade@enjoypineapple.com.br</a> com o assunto "Direitos LGPD" e descreva sua solicitação. Responderemos em até 15 dias úteis conforme exigido pela Lei Geral de Proteção de Dados (Lei nº 13.709/2018).
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          O BORA vende meus dados para terceiros?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <strong>Nunca.</strong> Não vendemos, alugamos nem comercializamos seus dados pessoais. Patrocinadores exibidos no app têm acesso apenas a dados agregados e anonimizados. Leia mais na <a href="privacidade.html">Política de Privacidade</a>.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TÉCNICO -->
+    <div class="cat-section">
+      <div class="cat-label">problemas técnicos</div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          O app travou ou está com erro. O que faço?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Tente: (1) fechar e reabrir o app, (2) verificar sua conexão com a internet, (3) atualizar o app para a versão mais recente. Se o problema persistir, envie um e-mail para <a href="mailto:suporte@enjoypineapple.com.br">suporte@enjoypineapple.com.br</a> descrevendo o que aconteceu, qual tela estava aberta e o modelo/sistema do seu celular.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          O app está disponível para iOS e Android?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Sim. O BORA está disponível na <strong>App Store</strong> (iOS 16+) e no <strong>Google Play</strong> (Android 8+). Se tiver dificuldades para encontrar, pesquise por "BORA atividade" ou acesse diretamente pelos links na <a href="index.html">página inicial</a>.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          Encontrei um dado incorreto ou desatualizado. Como reporto?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Ajude a melhorar o BORA! Envie um e-mail para <a href="mailto:suporte@enjoypineapple.com.br">suporte@enjoypineapple.com.br</a> com o assunto "Dado incorreto" e informe: o código CNAE consultado, o município, o dado que você viu no BORA e o dado correto (com a fonte, se possível). Agradecemos muito!
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PREFEITURAS -->
+    <div class="cat-section">
+      <div class="cat-label">prefeituras e parceiros</div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          Como minha cidade pode entrar no BORA?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Prefeituras e câmaras de dirigentes lojistas podem entrar em contato pelo e-mail <a href="mailto:parcerias@enjoypineapple.com.br">parcerias@enjoypineapple.com.br</a> para integrar sua legislação ao BORA e acelerar a ativação da cidade (sem depender do limite de 100 usuários). A integração é feita com dados públicos da legislação municipal de licenciamento.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggle(this)">
+          Sou contador/a. Posso usar o BORA com meus clientes?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Sim! O BORA foi pensado também para profissionais contábeis. Cada usuário tem um código de indicação que pode ser compartilhado com clientes. Para integrações mais avançadas ou uso em escritórios com múltiplos usuários, entre em contato pelo e-mail de parcerias.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p class="footer-text">
+      © 2026 <a href="index.html">Enjoy Pineapple</a> · BORA App ·
+      <a href="privacidade.html">Privacidade</a> ·
+      <a href="termos.html">Termos</a> ·
+      <a href="suporte.html">Suporte</a>
+    </p>
+  </footer>
+
+  <script>
+    function toggle(btn) {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      // close all
+      document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+      // open clicked if it was closed
+      if (!isOpen) item.classList.add('open');
+    }
+  </script>
+
+</body>
+</html>

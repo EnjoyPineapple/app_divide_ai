@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BORA-APP — Classificação de Risco de Atividades Econômicas</title>
+<meta name="description" content="O BORA-APP reúne a classificação de risco das atividades econômicas das legislações federal e municipal dos 5.570 municípios brasileiros.">
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090c;--bg2:#0c1017;--bg3:#101620;
+  --surface:#141d28;--surface2:#1a2535;--surface3:#1f2d3d;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.12);
+  --accent:#FFD600;--accent2:#e6bf00;--accent3:#fff176;
+  --accent-dim:rgba(255,214,0,0.08);
+  --text:#f0f4f8;--text2:#8a9bac;--text3:#4a5c6c;
+  --green:#00e5a0;--green-dim:rgba(0,229,160,0.1);
+  --red:#ff5f5f;--red-dim:rgba(255,95,95,0.1);
+  --blue:#3b9eff;--blue-dim:rgba(59,158,255,0.1);
+  --yellow-dim:rgba(255,214,0,0.1);
+  --radius-sm:8px;--radius:12px;--radius-lg:20px;--radius-xl:28px;
+  --shadow:0 8px 32px rgba(0,0,0,0.4);--shadow-lg:0 24px 64px rgba(0,0,0,0.5);
+  --font-display:"Bebas Neue",sans-serif;
+  --font-head:"Syne",sans-serif;
+  --font-mono:"DM Mono",monospace;
+  --font-body:"Inter",sans-serif;
+  --nav-h:72px;
+}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.6;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;outline:none}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:3px}
+.container{max-width:1200px;margin:0 auto;padding:0 2rem}
+.section-label{font-family:var(--font-mono);font-size:0.7rem;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem}
+.section-label::before{content:"//"}
+h2.display{font-family:var(--font-display);font-size:clamp(2.8rem,5vw,4.5rem);font-weight:400;line-height:0.95;letter-spacing:0.02em}
+h2.display em{font-style:normal;color:var(--accent)}
+.lead{font-size:1rem;color:var(--text2);line-height:1.75;font-weight:300;max-width:560px}
+.btn{display:inline-flex;align-items:center;gap:0.5rem;padding:0.8rem 1.75rem;border-radius:var(--radius-sm);font-size:0.875rem;font-weight:600;font-family:var(--font-body);transition:all 0.2s;cursor:pointer}
+.btn-primary{background:var(--accent);color:#000}
+.btn-primary:hover{background:var(--accent3);transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,214,0,0.25)}
+.btn-secondary{background:transparent;color:var(--text);border:1px solid var(--border2)}
+.btn-secondary:hover{border-color:var(--accent);background:var(--accent-dim);color:var(--accent)}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--nav-h);display:flex;align-items:center;background:rgba(7,9,12,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1200px;margin:0 auto;padding:0 2rem}
+.nav-logo{display:flex;align-items:center;gap:0.75rem}
+.nav-logo img{width:36px;height:36px;object-fit:contain;border-radius:8px}
+.nav-logo-text{font-family:var(--font-head);font-size:1.1rem;font-weight:800;letter-spacing:-0.02em}
+.nav-logo-text span{color:var(--accent)}
+.nav-links{display:flex;align-items:center;gap:0.25rem}
+.nav-links a{font-size:0.85rem;color:var(--text2);padding:0.45rem 0.85rem;border-radius:6px;transition:color 0.2s,background 0.2s}
+.nav-links a:hover{color:var(--text);background:rgba(255,255,255,0.05)}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;padding:8px;cursor:pointer;background:none;border:none}
+.nav-hamburger span{display:block;width:22px;height:2px;background:var(--text2);border-radius:2px;transition:all 0.3s}
+.mobile-menu{display:none;position:fixed;top:var(--nav-h);left:0;right:0;background:var(--bg2);border-bottom:1px solid var(--border2);padding:1rem 2rem;z-index:99}
+.mobile-menu a{display:block;padding:0.75rem 0;font-size:0.9rem;color:var(--text2);border-bottom:1px solid var(--border)}
+.mobile-menu a:last-child{border-bottom:none}
+.mobile-menu.open{display:block}
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;padding:calc(var(--nav-h) + 4rem) 0 5rem;position:relative;overflow:hidden}
+.hero-grid-bg{position:absolute;inset:0;z-index:0;background-image:linear-gradient(rgba(255,214,0,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,214,0,0.03) 1px,transparent 1px);background-size:64px 64px}
+.hero-glow-1{position:absolute;top:10%;right:-5%;width:600px;height:600px;background:radial-gradient(circle,rgba(255,214,0,0.06) 0%,transparent 65%);z-index:0;pointer-events:none}
+.hero-glow-2{position:absolute;bottom:-15%;left:-8%;width:500px;height:500px;background:radial-gradient(circle,rgba(59,158,255,0.04) 0%,transparent 65%);z-index:0;pointer-events:none}
+.hero-inner{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;width:100%;max-width:1200px;margin:0 auto;padding:0 2rem}
+.hero-badge{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(255,214,0,0.08);border:1px solid rgba(255,214,0,0.25);padding:0.3rem 0.85rem;border-radius:100px;font-family:var(--font-mono);font-size:0.65rem;color:var(--accent);margin-bottom:1.5rem;letter-spacing:0.08em;text-transform:uppercase}
+.pulse-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite;flex-shrink:0}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.8)}}
+.hero-h1{font-family:var(--font-display);font-size:clamp(3.5rem,7vw,6.5rem);font-weight:400;line-height:0.93;letter-spacing:0.02em;margin-bottom:1.5rem}
+.hero-h1 em{font-style:normal;color:var(--accent)}
+.hero-h1 .dim{color:var(--text3)}
+.hero-sub{font-size:1.05rem;color:var(--text2);line-height:1.75;margin-bottom:2.5rem;font-weight:300;max-width:480px}
+.store-badges{display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:3rem}
+.store-badge{display:inline-flex;align-items:center;gap:0.65rem;background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:0.6rem 1rem;cursor:pointer;transition:all 0.2s}
+.store-badge:hover{border-color:var(--accent);transform:translateY(-2px);background:var(--surface2)}
+.store-badge-text .small{font-size:0.6rem;color:var(--text3);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.07em;display:block}
+.store-badge-text .big{font-size:0.85rem;color:var(--text);font-weight:500;line-height:1.2}
+.hero-stats{display:flex;gap:2rem;padding-top:2rem;border-top:1px solid var(--border)}
+.stat-num{font-family:var(--font-display);font-size:2rem;color:var(--accent);line-height:1}
+.stat-label{font-size:0.65rem;color:var(--text3);font-family:var(--font-mono);letter-spacing:0.05em;text-transform:uppercase;margin-top:0.15rem}
+/* PHONE */
+.hero-mockup{position:relative;display:flex;justify-content:center}
+.phone-frame{width:275px;background:var(--surface);border:1px solid var(--border2);border-radius:32px;overflow:hidden;box-shadow:var(--shadow-lg),0 0 0 1px rgba(255,255,255,0.04),inset 0 1px 0 rgba(255,255,255,0.08)}
+.phone-notch{height:32px;background:var(--bg3);display:flex;align-items:center;justify-content:center}
+.notch-inner{width:80px;height:14px;background:var(--bg);border-radius:100px}
+.phone-screen{padding:1.25rem}
+.screen-header{display:flex;align-items:center;gap:0.6rem;margin-bottom:1rem}
+.screen-logo img{width:26px;height:26px;object-fit:contain;border-radius:5px}
+.screen-title{font-size:0.75rem;font-weight:700;font-family:var(--font-head)}
+.screen-sub{font-size:0.58rem;color:var(--text3);font-family:var(--font-mono)}
+.screen-search{display:flex;align-items:center;gap:0.5rem;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:0.6rem 0.75rem;margin-bottom:1rem}
+.search-text{font-family:var(--font-mono);font-size:0.7rem;color:var(--text2);flex:1}
+.search-cursor{width:1px;height:12px;background:var(--accent);animation:blink 1s infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.screen-tag{font-family:var(--font-mono);font-size:0.56rem;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.5rem}
+.screen-item{display:flex;align-items:center;justify-content:space-between;padding:0.55rem 0.5rem;background:var(--bg2);border:1px solid var(--border);border-radius:6px;margin-bottom:0.35rem}
+.screen-cnae{font-family:var(--font-mono);font-size:0.58rem;color:var(--text3)}
+.screen-name{font-size:0.7rem;color:var(--text);font-weight:500;max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.risk-chip{padding:0.18rem 0.48rem;border-radius:100px;font-size:0.56rem;font-family:var(--font-mono);font-weight:500;flex-shrink:0}
+.risk-green{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,229,160,0.2)}
+.risk-yellow{background:var(--yellow-dim);color:var(--accent);border:1px solid rgba(255,214,0,0.2)}
+.risk-red{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,95,95,0.2)}
+.screen-footer{margin-top:0.75rem;padding:0.55rem 0.75rem;background:var(--accent-dim);border:1px solid rgba(255,214,0,0.2);border-radius:6px;display:flex;align-items:center;gap:0.4rem;font-size:0.62rem;color:var(--accent);font-family:var(--font-mono)}
+.phone-home{height:20px;background:var(--bg3);display:flex;align-items:center;justify-content:center}
+.home-bar{width:60px;height:4px;background:var(--border2);border-radius:2px}
+.pill{position:absolute;background:rgba(20,29,40,0.92);backdrop-filter:blur(12px);border:1px solid var(--border2);border-radius:10px;padding:0.5rem 0.8rem;font-size:0.68rem;display:flex;align-items:center;gap:0.4rem;box-shadow:var(--shadow);white-space:nowrap}
+.pill-top{top:-1.25rem;right:-2.5rem;color:var(--accent);font-family:var(--font-mono)}
+.pill-bottom{bottom:-1.25rem;left:-2.5rem;color:var(--text2)}
+.pill-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+/* FEATURES */
+.features{padding:7rem 0;background:var(--bg2)}
+.features-header{text-align:center;margin-bottom:4rem}
+.features-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem;transition:all 0.25s;position:relative;overflow:hidden}
+.feature-card::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,var(--accent-dim) 0%,transparent 50%);opacity:0;transition:opacity 0.3s}
+.feature-card:hover{border-color:rgba(255,214,0,0.25);transform:translateY(-4px);box-shadow:var(--shadow)}
+.feature-card:hover::before{opacity:1}
+.feature-icon{width:48px;height:48px;background:var(--accent-dim);border:1px solid rgba(255,214,0,0.15);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;position:relative;z-index:1}
+.feature-card h3{font-family:var(--font-head);font-size:1.05rem;font-weight:700;margin-bottom:0.5rem;position:relative;z-index:1}
+.feature-card p{font-size:0.85rem;color:var(--text2);line-height:1.7;position:relative;z-index:1}
+.feature-tag{display:inline-flex;align-items:center;gap:0.35rem;margin-top:1rem;font-family:var(--font-mono);font-size:0.65rem;color:var(--accent);position:relative;z-index:1}
+/* PARA QUEM */
+.para-quem{padding:7rem 0}
+.audience-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;margin-top:3.5rem}
+.audience-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.75rem 1.5rem;transition:all 0.25s;display:flex;flex-direction:column;gap:1rem}
+.audience-card:hover{border-color:rgba(255,214,0,0.25);transform:translateY(-4px);box-shadow:var(--shadow)}
+.audience-icon{width:48px;height:48px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.audience-card h3{font-family:var(--font-head);font-size:1rem;font-weight:700}
+.audience-card p{font-size:0.83rem;color:var(--text2);line-height:1.65}
+/* COMO FUNCIONA */
+.como{padding:7rem 0;background:var(--bg2)}
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:4rem}
+.step-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem 1.75rem;transition:all 0.25s}
+.step-card:hover{border-color:rgba(255,214,0,0.25);transform:translateY(-4px)}
+.step-num{display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem}
+.step-circle{width:40px;height:40px;border-radius:50%;background:var(--accent-dim);border:1px solid rgba(255,214,0,0.25);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:0.75rem;color:var(--accent);flex-shrink:0}
+.step-line{flex:1;height:1px;background:var(--border)}
+.step-card h3{font-family:var(--font-head);font-size:1.05rem;font-weight:700;margin-bottom:0.65rem}
+.step-card p{font-size:0.85rem;color:var(--text2);line-height:1.7}
+.step-detail{margin-top:1.25rem;padding:0.85rem;background:var(--bg3);border-radius:var(--radius-sm);font-family:var(--font-mono);font-size:0.7rem;color:var(--text3)}
+.step-detail strong{color:var(--accent)}
+/* SOBRE */
+.sobre{padding:7rem 0}
+.sobre-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.sobre-visual{display:flex;flex-direction:column;gap:1.5rem}
+.bora-logo-card{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:2rem;display:flex;align-items:center;justify-content:center}
+.bora-logo-card img{width:160px;height:160px;object-fit:contain;border-radius:16px}
+.ep-logo-card{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:1.5rem 2rem;display:flex;align-items:center;gap:1.25rem}
+.ep-logo-card img{width:68px;height:68px;object-fit:contain;filter:invert(1);opacity:0.9;flex-shrink:0}
+.ep-logo-info strong{font-family:var(--font-head);font-size:1rem;font-weight:700;display:block;margin-bottom:0.2rem}
+.ep-logo-info span{font-size:0.75rem;color:var(--text3);font-family:var(--font-mono)}
+.sobre-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.sobre-stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem;text-align:center}
+.sobre-stat .num{font-family:var(--font-display);font-size:1.8rem;color:var(--accent);line-height:1}
+.sobre-stat .lbl{font-size:0.65rem;color:var(--text3);font-family:var(--font-mono);margin-top:0.3rem;text-transform:uppercase;letter-spacing:0.05em}
+.sobre-tags{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:2rem}
+.tag{display:inline-flex;align-items:center;gap:0.4rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.4rem 0.75rem;font-size:0.75rem;color:var(--text2);font-family:var(--font-mono)}
+.tag strong{color:var(--accent)}
+/* PARCEIRO */
+.parceiro{padding:7rem 0;background:var(--bg2);position:relative;overflow:hidden}
+.parceiro-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(255,214,0,0.04) 0%,transparent 70%);pointer-events:none}
+.parceiro-inner{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;position:relative;z-index:1}
+.parceiro-cards{display:flex;flex-direction:column;gap:0.75rem;margin-top:2.5rem}
+.parceiro-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem 1.25rem;display:flex;align-items:center;gap:0.85rem;transition:border-color 0.2s}
+.parceiro-card:hover{border-color:rgba(255,214,0,0.2)}
+.pc-icon{width:36px;height:36px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pc-text h4{font-size:0.85rem;font-weight:600;font-family:var(--font-head);color:var(--accent);margin-bottom:0.15rem}
+.pc-text p{font-size:0.78rem;color:var(--text2)}
+.form-card{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-xl);padding:2.5rem}
+.form-title{font-family:var(--font-head);font-size:1.25rem;font-weight:700;margin-bottom:0.4rem}
+.form-sub{font-size:0.83rem;color:var(--text2);margin-bottom:2rem}
+.form-group{margin-bottom:1.25rem}
+.form-group label{display:block;font-size:0.75rem;color:var(--text2);margin-bottom:0.4rem;font-family:var(--font-mono)}
+.form-control{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:0.8rem 1rem;font-family:var(--font-body);font-size:0.875rem;color:var(--text);outline:none;transition:border-color 0.2s;-webkit-appearance:none;appearance:none}
+.form-control::placeholder{color:var(--text3)}
+.form-control:focus{border-color:var(--accent)}
+textarea.form-control{resize:vertical;min-height:96px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-note{font-size:0.7rem;color:var(--text3);margin-top:1rem;text-align:center}
+/* FOOTER */
+footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem 0 2rem}
+.footer-inner{display:grid;grid-template-columns:1fr auto auto;gap:3rem;align-items:start;margin-bottom:2.5rem}
+.footer-brand p{font-size:0.8rem;color:var(--text3);max-width:280px;line-height:1.6;margin-top:0.75rem}
+.footer-ep{display:flex;align-items:center;gap:0.5rem;margin-top:1.25rem}
+.footer-ep img{width:20px;height:20px;object-fit:contain;filter:invert(1);opacity:0.5;border-radius:50%}
+.footer-ep span{font-size:0.72rem;color:var(--text3);font-family:var(--font-mono)}
+.footer-col h4{font-family:var(--font-mono);font-size:0.63rem;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1rem}
+.footer-col a{display:block;font-size:0.82rem;color:var(--text2);margin-bottom:0.5rem;transition:color 0.2s}
+.footer-col a:hover{color:var(--text)}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:2rem;border-top:1px solid var(--border)}
+.footer-copy{font-size:0.74rem;color:var(--text3)}
+.footer-links{display:flex;gap:1.5rem}
+.footer-links a{font-size:0.74rem;color:var(--text3);transition:color 0.2s}
+.footer-links a:hover{color:var(--text2)}
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.65s ease,transform 0.65s ease}
+.reveal.visible{opacity:1;transform:none}
+.reveal-delay-1{transition-delay:0.1s}
+.reveal-delay-2{transition-delay:0.2s}
+.reveal-delay-3{transition-delay:0.3s}
+.reveal-delay-4{transition-delay:0.4s}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* RESPONSIVE */
+@media(max-width:1024px){.audience-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){
+  .nav-links,.nav-right{display:none}
+  .nav-hamburger{display:flex}
+  .hero-inner{grid-template-columns:1fr;gap:3rem;text-align:center}
+  .hero-sub{margin:0 auto 2.5rem}
+  .store-badges,.hero-stats{justify-content:center}
+  .features-grid{grid-template-columns:1fr}
+  .steps-grid{grid-template-columns:1fr;gap:1.5rem}
+  .sobre-grid,.parceiro-inner{grid-template-columns:1fr;gap:3rem}
+  .sobre-visual{order:-1}
+  .footer-inner{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .container{padding:0 1.25rem}
+  .hero{padding:calc(var(--nav-h) + 2.5rem) 0 3.5rem}
+  .features,.para-quem,.como,.sobre,.parceiro{padding:5rem 0}
+  .audience-grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  .sobre-stats{grid-template-columns:1fr 1fr}
+  h2.display{font-size:clamp(2.2rem,8vw,3rem)}
+  .hero-h1{font-size:clamp(3rem,10vw,4.5rem)}
+  .pill-top,.pill-bottom{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav id="mainNav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <img src="icon.png" alt="BORA-APP">
+      <div class="nav-logo-text">BORA<span>.</span>APP</div>
+    </a>
+    <div class="nav-links">
+      <a href="#funcionalidades">Funcionalidades</a>
+      <a href="#para-quem">Para Quem</a>
+      <a href="#como-funciona">Como Funciona</a>
+      <a href="#sobre">Sobre</a>
+      <a href="#parceiro">Parceiro</a>
+    </div>
+    <div class="nav-right">
+      <a href="#parceiro" class="btn btn-primary" style="padding:0.55rem 1.25rem;font-size:0.82rem">Entrar em Contato</a>
+    </div>
+    <button class="nav-hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#funcionalidades">Funcionalidades</a>
+  <a href="#para-quem">Para Quem</a>
+  <a href="#como-funciona">Como Funciona</a>
+  <a href="#sobre">Sobre</a>
+  <a href="#parceiro">Parceiro / Contato</a>
+</div>
+
+<section class="hero">
+  <div class="hero-grid-bg" aria-hidden="true"></div>
+  <div class="hero-glow-1" aria-hidden="true"></div>
+  <div class="hero-glow-2" aria-hidden="true"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge reveal">
+        <span class="pulse-dot" aria-hidden="true"></span>
+        Em breve &mdash; Acesso antecipado disponível
+      </div>
+      <h1 class="hero-h1 reveal reveal-delay-1">
+        CLASSIFIQUE<br>O <em>RISCO</em><br><span class="dim">DA ATIVIDADE</span>
+      </h1>
+      <p class="hero-sub reveal reveal-delay-2">O BORA-APP cruza a classificação de risco das atividades econômicas com as legislações federal e municipal — cobrindo os 5.570 municípios brasileiros em um único app.</p>
+      <div class="store-badges reveal reveal-delay-3">
+        <div class="store-badge" role="button" tabindex="0" aria-label="Baixar na App Store">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="color:var(--text);opacity:0.85" aria-hidden="true"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          <div class="store-badge-text"><span class="small">Baixar na</span><span class="big">App Store</span></div>
+        </div>
+        <div class="store-badge" role="button" tabindex="0" aria-label="Disponível no Google Play">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="color:var(--text);opacity:0.85" aria-hidden="true"><path d="M3.18 23.76c.3.17.64.22.99.14l12.12-6.99-2.54-2.54-10.57 9.39zM.69 1.31C.27 1.72 0 2.35 0 3.18v17.64c0 .83.27 1.46.69 1.87l.1.09 9.88-9.88v-.23L.79 1.22l-.1.09zm18.36 8.08-2.73-1.58-2.84 2.84 2.84 2.84 2.76-1.59c.79-.45.79-1.19-.03-1.51zM4.17.24l12.12 6.99-2.54 2.54L4.17.24z"/></svg>
+          <div class="store-badge-text"><span class="small">Disponível no</span><span class="big">Google Play</span></div>
+        </div>
+      </div>
+      <div class="hero-stats reveal reveal-delay-4">
+        <div><div class="stat-num">5.570</div><div class="stat-label">Municípios</div></div>
+        <div><div class="stat-num">1.300+</div><div class="stat-label">CNAEs</div></div>
+        <div><div class="stat-num">3</div><div class="stat-label">Níveis de risco</div></div>
+      </div>
+    </div>
+    <div class="hero-mockup reveal reveal-delay-2" aria-hidden="true">
+      <div style="position:relative;display:inline-block">
+        <div class="phone-frame">
+          <div class="phone-notch"><div class="notch-inner"></div></div>
+          <div class="phone-screen">
+            <div class="screen-header">
+              <div class="screen-logo"><img src="icon.png" alt=""></div>
+              <div><div class="screen-title">BORA APP</div><div class="screen-sub">CNAE vs Município</div></div>
+            </div>
+            <div class="screen-search">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text3);opacity:0.6;flex-shrink:0"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <span class="search-text">47.41-5-00 — São Paulo</span>
+              <div class="search-cursor"></div>
+            </div>
+            <div class="screen-tag">Resultados encontrados</div>
+            <div class="screen-item">
+              <div><div class="screen-cnae">47.41-5-00</div><div class="screen-name">Com. produtos madeira</div></div>
+              <div class="risk-chip risk-yellow">MÉDIO</div>
+            </div>
+            <div class="screen-item">
+              <div><div class="screen-cnae">47.43-1-00</div><div class="screen-name">Material elétrico</div></div>
+              <div class="risk-chip risk-green">BAIXO</div>
+            </div>
+            <div class="screen-item">
+              <div><div class="screen-cnae">47.51-2-01</div><div class="screen-name">Tecidos / armarinho</div></div>
+              <div class="risk-chip risk-red">ALTO</div>
+            </div>
+            <div class="screen-item">
+              <div><div class="screen-cnae">47.44-0-01</div><div class="screen-name">Ferragens e ferramentas</div></div>
+              <div class="risk-chip risk-green">BAIXO</div>
+            </div>
+            <div class="screen-footer">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+              Fed. + Municipal · atualizado
+            </div>
+          </div>
+          <div class="phone-home"><div class="home-bar"></div></div>
+        </div>
+        <div class="pill pill-top"><span class="pill-dot" style="background:var(--accent)"></span>Risco identificado!</div>
+        <div class="pill pill-bottom"><span class="pill-dot" style="background:var(--green)"></span>Base atualizada</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="funcionalidades" class="features">
+  <div class="container">
+    <div class="features-header reveal">
+      <div class="section-label" style="justify-content:center">Funcionalidades</div>
+      <h2 class="display">TUDO QUE VOCÊ<br>PRECISA <em>SABER</em></h2>
+      <p class="lead" style="margin:1rem auto 0;text-align:center">Pesquise qualquer atividade econômica e descubra o risco de funcionamento no município.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="feature-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+        <h3>Busca por CNAE</h3>
+        <p>Pesquise por código CNAE ou pelo nome da atividade econômica. Resultados instantâneos com filtro por estado e município.</p>
+        <span class="feature-tag" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="var(--accent)"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>+1.300 atividades cadastradas</span>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <div class="feature-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+        <h3>Classificação de Risco</h3>
+        <p>Risco <strong style="color:var(--green)">Baixo</strong>, <strong style="color:var(--accent)">Médio</strong> ou <strong style="color:var(--red)">Alto</strong> com base nas normas federais e na legislação específica do município.</p>
+        <span class="feature-tag" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="var(--accent)"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>3 níveis de classificação</span>
+      </div>
+      <div class="feature-card reveal reveal-delay-3">
+        <div class="feature-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div>
+        <h3>Legislação Federal + Municipal</h3>
+        <p>Acesso às normas da Resolução CONAMA, ANVISA e às leis municipais — tudo consolidado em uma única consulta.</p>
+        <span class="feature-tag" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="var(--accent)"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>5.570 municípios cobertos</span>
+      </div>
+      <div class="feature-card reveal reveal-delay-4">
+        <div class="feature-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></div>
+        <h3>Sempre Atualizado</h3>
+        <p>Base de dados atualizada continuamente. Novas legislações municipais são incluídas regularmente pela equipe Enjoy Pineapple.</p>
+        <span class="feature-tag" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="var(--accent)"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Atualizações automáticas</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="para-quem" class="para-quem">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Para Quem</div>
+      <h2 class="display">FEITO PARA QUEM<br>PRECISA DE <em>CLAREZA</em></h2>
+      <p class="lead" style="margin-top:1rem">Profissionais e empresas que lidam com abertura de negócios, alvarás e compliance regulatório.</p>
+    </div>
+    <div class="audience-grid">
+      <div class="audience-card reveal reveal-delay-1">
+        <div class="audience-icon" style="background:rgba(255,214,0,0.1)" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+        <h3>Empresários</h3>
+        <p>Descubra o risco regulatório antes de abrir ou expandir seu negócio. Evite surpresas na obtenção de alvarás e licenças.</p>
+      </div>
+      <div class="audience-card reveal reveal-delay-2">
+        <div class="audience-icon" style="background:var(--blue-dim)" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg></div>
+        <h3>Contadores</h3>
+        <p>Oriente seus clientes com precisão sobre o enquadramento regulatório em qualquer município do Brasil.</p>
+      </div>
+      <div class="audience-card reveal reveal-delay-3">
+        <div class="audience-icon" style="background:var(--green-dim)" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+        <h3>Prefeituras</h3>
+        <p>Ferramenta de apoio para servidores municipais consultarem e validarem classificações de risco das atividades locais.</p>
+      </div>
+      <div class="audience-card reveal reveal-delay-4">
+        <div class="audience-icon" style="background:var(--red-dim)" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3>Advogados</h3>
+        <p>Apoio em due diligence regulatória, assessoria na abertura de empresas e consultoria sobre compliance municipal.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="como-funciona" class="como">
+  <div class="container">
+    <div class="reveal" style="text-align:center">
+      <div class="section-label" style="justify-content:center">Como Funciona</div>
+      <h2 class="display">3 PASSOS PARA A<br><em>RESPOSTA</em> CERTA</h2>
+      <p class="lead" style="margin:1rem auto 0;text-align:center">Simples, rápido e sem burocracia. Em segundos você sabe o risco da atividade no município.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card reveal reveal-delay-1">
+        <div class="step-num" aria-hidden="true"><div class="step-circle">01</div><div class="step-line"></div></div>
+        <h3>Busque a Atividade</h3>
+        <p>Digite o código CNAE ou o nome da atividade econômica. Selecione o estado e município desejado.</p>
+        <div class="step-detail">Ex: <strong>47.81-4-00</strong> — Comércio ambulante e outros tipos de comércio varejista</div>
+      </div>
+      <div class="step-card reveal reveal-delay-2">
+        <div class="step-num" aria-hidden="true"><div class="step-circle">02</div><div class="step-line"></div></div>
+        <h3>Veja a Classificação</h3>
+        <p>O app exibe o nível de risco: <strong style="color:var(--green)">Baixo</strong>, <strong style="color:var(--accent)">Médio</strong> ou <strong style="color:var(--red)">Alto</strong>, com base nas normas vigentes.</p>
+        <div class="step-detail">Combinação da legislação <strong>federal</strong> + normas do <strong>município</strong></div>
+      </div>
+      <div class="step-card reveal reveal-delay-3">
+        <div class="step-num" aria-hidden="true"><div class="step-circle">03</div><div class="step-line"></div></div>
+        <h3>Entenda a Legislação</h3>
+        <p>Acesse o detalhamento das normas aplicáveis, requisitos de licenciamento e documentos necessários.</p>
+        <div class="step-detail">Referências a <strong>CONAMA</strong>, <strong>ANVISA</strong> e leis municipais</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sobre" class="sobre">
+  <div class="container">
+    <div class="sobre-grid">
+      <div class="sobre-visual reveal">
+        <div class="bora-logo-card">
+          <img src="icon.png" alt="BORA-APP logotipo" style="border-radius:16px">
+        </div>
+        <div class="ep-logo-card">
+          <img src="enjoypineapple.jpeg" alt="Enjoy Pineapple logotipo">
+          <div class="ep-logo-info">
+            <strong>Enjoy Pineapple</strong>
+            <span>Startup Brasileira</span>
+          </div>
+        </div>
+        <div class="sobre-stats">
+          <div class="sobre-stat"><div class="num">5.570</div><div class="lbl">Municípios</div></div>
+          <div class="sobre-stat"><div class="num">100%</div><div class="lbl">Brasileiro</div></div>
+          <div class="sobre-stat"><div class="num">2024</div><div class="lbl">Fundação</div></div>
+        </div>
+      </div>
+      <div class="sobre-content reveal reveal-delay-2">
+        <div class="section-label">Sobre a Empresa</div>
+        <h2 class="display">UMA SOLUÇÃO <em>BRASILEIRA</em> PARA UM PROBLEMA BRASILEIRO</h2>
+        <p class="lead" style="margin-top:1rem;margin-bottom:1.5rem">O BORA-APP é desenvolvido pela <strong style="color:var(--text)">Enjoy Pineapple</strong>, startup comprometida em simplificar a relação entre cidadãos, empresários e a complexidade regulatória do Brasil.</p>
+        <p style="font-size:0.9rem;color:var(--text2);line-height:1.75;margin-bottom:2rem">Com 5.570 municípios, cada um com poder legislativo próprio, entender o risco de uma atividade econômica é um desafio diário para milhões de pessoas. Identificamos esse problema e construímos a solução.</p>
+        <div class="sobre-tags">
+          <span class="tag"><strong>01</strong> Legislação Ambiental</span>
+          <span class="tag"><strong>02</strong> Vigilância Sanitária</span>
+          <span class="tag"><strong>03</strong> Federal + Municipal</span>
+          <span class="tag"><strong>04</strong> Atualização Contínua</span>
+        </div>
+        <a href="#parceiro" class="btn btn-secondary">Seja um Parceiro</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="parceiro" class="parceiro">
+  <div class="parceiro-glow" aria-hidden="true"></div>
+  <div class="container">
+    <div class="parceiro-inner">
+      <div class="parceiro-info reveal">
+        <div class="section-label">Parceiro / Contato</div>
+        <h2 class="display">VAMOS <em>CRESCER</em><br>JUNTOS</h2>
+        <p class="lead" style="margin-top:1rem">Seja você um contador, desenvolvedor, prefeitura ou empresa — há espaço para colaborar com o BORA-APP.</p>
+        <div class="parceiro-cards">
+          <div class="parceiro-card">
+            <div class="pc-icon" style="background:var(--yellow-dim)" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <div class="pc-text"><h4>Parceiro Comercial</h4><p>Revenda ou integre o BORA-APP na sua solução</p></div>
+          </div>
+          <div class="parceiro-card">
+            <div class="pc-icon" style="background:var(--blue-dim)" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 2 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
+            <div class="pc-text"><h4>Integração de Dados / API</h4><p>Conecte sistemas contábeis e municipais via API</p></div>
+          </div>
+          <div class="parceiro-card">
+            <div class="pc-icon" style="background:var(--green-dim)" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+            <div class="pc-text"><h4>Prefeituras e Órgãos</h4><p>Solução white-label para gestão municipal</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="form-card reveal reveal-delay-2">
+        <div class="form-title">Entre em Contato</div>
+        <div class="form-sub">Preencha o formulário e nossa equipe responderá em até 48 horas.</div>
+        <form id="contactForm" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="f-nome">Nome completo</label>
+              <input class="form-control" type="text" id="f-nome" name="nome" placeholder="Seu nome" required>
+            </div>
+            <div class="form-group">
+              <label for="f-empresa">Empresa / Organização</label>
+              <input class="form-control" type="text" id="f-empresa" name="empresa" placeholder="Sua empresa">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="f-email">E-mail profissional</label>
+            <input class="form-control" type="email" id="f-email" name="email" placeholder="voce@empresa.com.br" required>
+          </div>
+          <div class="form-group">
+            <label for="f-perfil">Tipo de interesse</label>
+            <select class="form-control" id="f-perfil" name="perfil" required>
+              <option value="" disabled selected>Selecione uma opção</option>
+              <option>Parceiro Comercial</option>
+              <option>Integração de Dados / API</option>
+              <option>Prefeitura / Órgão Público</option>
+              <option>Escritório de Contabilidade</option>
+              <option>Escritório de Advocacia</option>
+              <option>Outro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="f-msg">Mensagem</label>
+            <textarea class="form-control" id="f-msg" name="mensagem" placeholder="Conte um pouco sobre seu interesse..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center" id="submitBtn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Enviar Mensagem
+          </button>
+          <p class="form-note">Seus dados são tratados conforme nossa <a href="privacidade.html" style="color:var(--text2);text-decoration:underline">Política de Privacidade</a>.</p>
+        </form>
+        <div id="formSuccess" style="display:none;text-align:center;padding:2.5rem 0" role="status" aria-live="polite">
+          <div style="width:56px;height:56px;background:var(--green-dim);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div style="font-family:var(--font-head);font-size:1.1rem;font-weight:700;margin-bottom:0.5rem">Mensagem enviada!</div>
+          <p style="font-size:0.85rem;color:var(--text2)">Nossa equipe entrará em contato em breve.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="nav-logo">
+          <img src="icon.png" alt="BORA-APP" style="width:32px;height:32px;border-radius:6px">
+          <div class="nav-logo-text" style="font-size:1rem">BORA<span>.</span>APP</div>
+        </div>
+        <p>Classificação de risco de atividades econômicas para os 5.570 municípios brasileiros.</p>
+        <div class="footer-ep">
+          <img src="enjoypineapple.jpeg" alt="Enjoy Pineapple">
+          <span>by Enjoy Pineapple</span>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Produto</h4>
+        <a href="#funcionalidades">Funcionalidades</a>
+        <a href="#para-quem">Para Quem</a>
+        <a href="#como-funciona">Como Funciona</a>
+        <a href="#parceiro">Baixar App</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal &amp; Suporte</h4>
+        <a href="privacidade.html">Política de Privacidade</a>
+        <a href="termos.html">Termos de Uso</a>
+        <a href="suporte.html">Suporte</a>
+        <a href="#parceiro">Contato</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">&copy; 2025 Enjoy Pineapple. Todos os direitos reservados.</span>
+      <div class="footer-links">
+        <a href="privacidade.html">Privacidade</a>
+        <a href="termos.html">Termos</a>
+        <a href="suporte.html">Suporte</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var btn = document.getElementById('hamburger');
+  var menu = document.getElementById('mobileMenu');
+  btn.addEventListener('click', function(){
+    var isOpen = menu.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(isOpen));
+    var s = btn.querySelectorAll('span');
+    s[0].style.transform = isOpen ? 'translateY(7px) rotate(45deg)' : '';
+    s[1].style.opacity = isOpen ? '0' : '';
+    s[2].style.transform = isOpen ? 'translateY(-7px) rotate(-45deg)' : '';
+  });
+  menu.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      menu.classList.remove('open');
+      btn.setAttribute('aria-expanded','false');
+      var s = btn.querySelectorAll('span');
+      s[0].style.transform=''; s[1].style.opacity=''; s[2].style.transform='';
+    });
+  });
+  var reveals = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    },{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+    reveals.forEach(function(el){ obs.observe(el); });
+  } else {
+    reveals.forEach(function(el){ el.classList.add('visible'); });
+  }
+  var nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', function(){
+    nav.style.borderBottomColor = window.scrollY > 30 ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.06)';
+  },{passive:true});
+  var form = document.getElementById('contactForm');
+  var submitBtn = document.getElementById('submitBtn');
+  var successDiv = document.getElementById('formSuccess');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var fields = [document.getElementById('f-nome'), document.getElementById('f-email'), document.getElementById('f-perfil')];
+    var valid = true;
+    fields.forEach(function(el){
+      if(!el.value.trim()){
+        el.style.borderColor='var(--red)';
+        el.addEventListener('input',function(){ el.style.borderColor=''; },{once:true});
+        valid=false;
+      }
+    });
+    if(!valid) return;
+    submitBtn.disabled=true;
+    submitBtn.innerHTML='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 0.8s linear infinite" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.22-8.56"/></svg> Enviando...';
+    setTimeout(function(){ form.style.display='none'; successDiv.style.display='block'; },1200);
+  });
+  document.querySelectorAll('.store-badge').forEach(function(el){
+    el.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); el.click(); } });
+  });
+})();
+</script>
+</body>
+</html>

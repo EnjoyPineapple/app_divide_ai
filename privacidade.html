@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Política de Privacidade — BORA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --yellow: #FFD600;
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --border: #222222;
+      --text: #e8e8e8;
+      --muted: #888888;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body: 'Syne', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      color: var(--yellow);
+      letter-spacing: 0.06em;
+      text-decoration: none;
+    }
+    .nav-back {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--yellow); }
+
+    /* HEADER */
+    .page-header {
+      border-bottom: 1px solid var(--border);
+      padding: 4rem 2rem 3rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .page-tag {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--yellow);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .page-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      letter-spacing: 0.04em;
+      line-height: 1;
+      color: #fff;
+      margin-bottom: 1.5rem;
+    }
+    .page-meta {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .page-meta span { color: var(--yellow); }
+
+    /* CONTENT */
+    .content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 2rem 6rem;
+    }
+
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--yellow);
+      padding: 1.5rem 2rem;
+      margin-bottom: 3rem;
+      border-radius: 2px;
+    }
+    .toc-title {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--yellow);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .toc ol {
+      padding-left: 1.2rem;
+    }
+    .toc li {
+      margin-bottom: 0.35rem;
+    }
+    .toc a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .toc a:hover { color: var(--yellow); }
+
+    .section {
+      margin-bottom: 3.5rem;
+      padding-bottom: 3.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .section:last-child {
+      border-bottom: none;
+    }
+
+    h2 {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      letter-spacing: 0.05em;
+      color: #fff;
+      margin-bottom: 1.25rem;
+      line-height: 1.1;
+    }
+    .section-number {
+      color: var(--yellow);
+      margin-right: 0.3em;
+    }
+
+    p {
+      color: var(--text);
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+    }
+
+    ul, ol {
+      padding-left: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    li {
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .highlight-box {
+      background: rgba(255, 214, 0, 0.06);
+      border: 1px solid rgba(255, 214, 0, 0.2);
+      border-radius: 4px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .highlight-box p {
+      margin-bottom: 0;
+      font-size: 0.9rem;
+    }
+
+    strong { color: #fff; font-weight: 600; }
+
+    .contact-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      border-radius: 4px;
+      margin-top: 1.5rem;
+    }
+    .contact-block p { margin-bottom: 0.5rem; }
+    .contact-block a {
+      color: var(--yellow);
+      text-decoration: none;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+    }
+    .footer-text {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+    .footer-text a {
+      color: var(--yellow);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">BORA</a>
+    <a href="index.html" class="nav-back">← Voltar ao início</a>
+  </nav>
+
+  <div class="page-header">
+    <div class="page-tag">// legal</div>
+    <h1 class="page-title">Política de Privacidade</h1>
+    <p class="page-meta">
+      Última atualização: <span>Junho de 2026</span> &nbsp;·&nbsp; Versão <span>1.0</span>
+    </p>
+  </div>
+
+  <div class="content">
+
+    <div class="toc">
+      <div class="toc-title">// sumário</div>
+      <ol>
+        <li><a href="#s1">Quem somos</a></li>
+        <li><a href="#s2">Quais dados coletamos</a></li>
+        <li><a href="#s3">Como usamos seus dados</a></li>
+        <li><a href="#s4">CPF e dados sensíveis</a></li>
+        <li><a href="#s5">Compartilhamento de dados</a></li>
+        <li><a href="#s6">Armazenamento e segurança</a></li>
+        <li><a href="#s7">Seus direitos (LGPD)</a></li>
+        <li><a href="#s8">Retenção de dados</a></li>
+        <li><a href="#s9">Cookies e rastreamento</a></li>
+        <li><a href="#s10">Menores de idade</a></li>
+        <li><a href="#s11">Alterações nesta política</a></li>
+        <li><a href="#s12">Contato</a></li>
+      </ol>
+    </div>
+
+    <div class="highlight-box">
+      <p>Esta Política de Privacidade descreve como a <strong>Enjoy Pineapple</strong> coleta, usa e protege as informações dos usuários do aplicativo <strong>BORA</strong>. Ao usar o BORA, você concorda com as práticas descritas aqui. Leia com atenção — escrevemos em linguagem direta, sem juridiquês desnecessário.</p>
+    </div>
+
+    <div class="section" id="s1">
+      <h2><span class="section-number">01.</span> Quem somos</h2>
+      <p>O BORA é um aplicativo desenvolvido e operado pela <strong>Enjoy Pineapple</strong>, empresa brasileira com sede em Porto Alegre – RS. O BORA cruza dados federais do CGSIM com legislação municipal para exibir a classificação de risco de atividades econômicas (CNAE) para empreendedores, contadores e servidores públicos.</p>
+      <p>Para fins da Lei Geral de Proteção de Dados Pessoais (LGPD – Lei nº 13.709/2018), a Enjoy Pineapple é a <strong>controladora</strong> dos dados pessoais tratados neste aplicativo.</p>
+    </div>
+
+    <div class="section" id="s2">
+      <h2><span class="section-number">02.</span> Quais dados coletamos</h2>
+      <p>Coletamos apenas os dados necessários para o funcionamento do aplicativo:</p>
+      <ul>
+        <li><strong>Cadastro:</strong> endereço de e-mail e senha (para autenticação).</li>
+        <li><strong>Perfil:</strong> apelido/nome de exibição, data de nascimento, município de interesse e profissão ou ramo de atividade.</li>
+        <li><strong>CPF:</strong> solicitado para verificação de unicidade de conta. <strong>Armazenamos apenas o hash criptográfico (SHA-256)</strong> — o número em si nunca é salvo em nossos servidores. Veja a seção 4 para detalhes.</li>
+        <li><strong>Código de indicação:</strong> se você foi convidado por outro usuário, registramos o vínculo de indicação (sem dados adicionais do indicador).</li>
+        <li><strong>Dados de uso:</strong> interações com o app (buscas realizadas, telas acessadas) para fins de melhoria do serviço. Não identificamos individualmente essas ações.</li>
+        <li><strong>Dados técnicos:</strong> tipo de dispositivo, sistema operacional e versão do app, coletados automaticamente pelo Expo/Supabase para diagnóstico de erros.</li>
+      </ul>
+      <p>Não coletamos dados de localização GPS, acesso à câmera, galeria de fotos ou qualquer informação não listada acima.</p>
+    </div>
+
+    <div class="section" id="s3">
+      <h2><span class="section-number">03.</span> Como usamos seus dados</h2>
+      <p>Usamos suas informações para:</p>
+      <ul>
+        <li>Criar e gerenciar sua conta no BORA.</li>
+        <li>Personalizar a experiência (exibir informações do município que você escolheu).</li>
+        <li>Verificar unicidade de cadastro via hash de CPF, evitando contas duplicadas.</li>
+        <li>Gerenciar o programa de indicações.</li>
+        <li>Enviar comunicações relacionadas ao serviço (atualizações, alertas de segurança) — nunca marketing sem consentimento explícito.</li>
+        <li>Melhorar o aplicativo com base em padrões de uso agregados e anonimizados.</li>
+        <li>Cumprir obrigações legais aplicáveis.</li>
+      </ul>
+    </div>
+
+    <div class="section" id="s4">
+      <h2><span class="section-number">04.</span> CPF e dados sensíveis</h2>
+      <div class="highlight-box">
+        <p>⚠️ <strong>Importante:</strong> O BORA nunca armazena seu número de CPF. A validação ocorre inteiramente no seu dispositivo. Apenas o resultado do hash SHA-256 (uma sequência criptográfica irreversível) é enviado e armazenado para fins de controle de unicidade de cadastro.</p>
+      </div>
+      <p>Esse processo significa que:</p>
+      <ul>
+        <li>Não é possível recuperar seu CPF a partir do dado armazenado.</li>
+        <li>Em caso de eventual violação de dados, seu CPF permanece protegido.</li>
+        <li>Somos transparentes sobre esse processo conforme exigido pela LGPD (Art. 8º e 9º).</li>
+      </ul>
+      <p>Não tratamos outras categorias de dados sensíveis definidas pela LGPD (origem racial ou étnica, convicção religiosa, saúde, dado genético, orientação sexual, dado biométrico, filiação sindical ou posição política).</p>
+    </div>
+
+    <div class="section" id="s5">
+      <h2><span class="section-number">05.</span> Compartilhamento de dados</h2>
+      <p>Não vendemos, alugamos ou comercializamos seus dados pessoais. Podemos compartilhá-los apenas nas seguintes situações:</p>
+      <ul>
+        <li><strong>Provedores de infraestrutura:</strong> utilizamos a plataforma <strong>Supabase</strong> (banco de dados e autenticação) e <strong>Expo</strong> (distribuição do app). Esses parceiros atuam como operadores e estão sujeitos a contratos de confidencialidade.</li>
+        <li><strong>Obrigação legal:</strong> quando exigido por lei, decisão judicial ou autoridade competente.</li>
+        <li><strong>Proteção de direitos:</strong> para investigar fraudes ou proteger os direitos da Enjoy Pineapple, dos usuários ou de terceiros.</li>
+      </ul>
+      <p>Parceiros (patrocinadores) exibidos no app têm acesso apenas a dados agregados e anonimizados (ex.: número de buscas em determinada categoria CNAE em um município). Nunca compartilhamos dados identificáveis com patrocinadores.</p>
+    </div>
+
+    <div class="section" id="s6">
+      <h2><span class="section-number">06.</span> Armazenamento e segurança</h2>
+      <p>Seus dados são armazenados em servidores gerenciados pelo Supabase, com infraestrutura na AWS (região us-east-1). O Supabase é certificado SOC 2 Type II e utiliza criptografia em trânsito (TLS 1.2+) e em repouso.</p>
+      <p>Adotamos as seguintes medidas de segurança:</p>
+      <ul>
+        <li>Autenticação com senha (bcrypt) e tokens JWT de curta duração.</li>
+        <li>Políticas de Row Level Security (RLS) no banco de dados — cada usuário acessa apenas seus próprios dados.</li>
+        <li>Hash SHA-256 para CPF, sem armazenamento do dado original.</li>
+        <li>Acesso ao banco restrito por chaves com permissões mínimas necessárias.</li>
+      </ul>
+      <p>Nenhum sistema é 100% seguro. Em caso de incidente que afete seus direitos, notificaremos você e a ANPD conforme prazo legal (72 horas para a autoridade, o mais breve possível para os titulares).</p>
+    </div>
+
+    <div class="section" id="s7">
+      <h2><span class="section-number">07.</span> Seus direitos (LGPD)</h2>
+      <p>Como titular de dados, você tem os seguintes direitos garantidos pela LGPD:</p>
+      <ul>
+        <li><strong>Confirmação e acesso:</strong> saber se tratamos seus dados e acessá-los.</li>
+        <li><strong>Correção:</strong> solicitar a correção de dados incompletos, inexatos ou desatualizados.</li>
+        <li><strong>Anonimização ou eliminação:</strong> solicitar que dados desnecessários ou tratados em desconformidade com a lei sejam anonimizados, bloqueados ou eliminados.</li>
+        <li><strong>Portabilidade:</strong> receber seus dados em formato estruturado.</li>
+        <li><strong>Informação:</strong> ser informado sobre com quem compartilhamos seus dados.</li>
+        <li><strong>Revogação do consentimento:</strong> retirar consentimento a qualquer momento, sem prejuízo ao tratamento realizado anteriormente.</li>
+        <li><strong>Eliminação da conta:</strong> solicitar a exclusão completa da sua conta e dados associados.</li>
+      </ul>
+      <p>Para exercer qualquer desses direitos, entre em contato pelo e-mail indicado na seção 12. Responderemos em até 15 dias úteis.</p>
+    </div>
+
+    <div class="section" id="s8">
+      <h2><span class="section-number">08.</span> Retenção de dados</h2>
+      <p>Mantemos seus dados pessoais enquanto sua conta estiver ativa. Após a exclusão da conta:</p>
+      <ul>
+        <li>Dados de perfil e histórico de uso são eliminados em até 30 dias.</li>
+        <li>O hash de CPF é eliminado imediatamente após a solicitação.</li>
+        <li>Logs de sistema (sem identificação pessoal) podem ser mantidos por até 1 ano para fins de segurança e diagnóstico.</li>
+        <li>Dados exigidos por obrigação legal podem ser retidos pelo prazo determinado por lei.</li>
+      </ul>
+    </div>
+
+    <div class="section" id="s9">
+      <h2><span class="section-number">09.</span> Cookies e rastreamento</h2>
+      <p>O aplicativo BORA <strong>não utiliza cookies</strong>. Para manutenção da sessão, utilizamos tokens de autenticação armazenados localmente no dispositivo (AsyncStorage), que não são compartilhados com terceiros.</p>
+      <p>O site enjoypineapple.com.br pode utilizar cookies técnicos essenciais para funcionamento básico. Não utilizamos cookies de rastreamento ou publicidade comportamental.</p>
+    </div>
+
+    <div class="section" id="s10">
+      <h2><span class="section-number">10.</span> Menores de idade</h2>
+      <p>O BORA é destinado a maiores de 16 anos. Validamos a data de nascimento durante o cadastro. Não coletamos intencionalmente dados de crianças menores de 16 anos. Se identificarmos que dados de um menor foram coletados sem o consentimento adequado, os eliminaremos imediatamente.</p>
+    </div>
+
+    <div class="section" id="s11">
+      <h2><span class="section-number">11.</span> Alterações nesta política</h2>
+      <p>Podemos atualizar esta Política de Privacidade periodicamente. Notificaremos você por e-mail ou notificação no app com pelo menos 15 dias de antecedência em caso de mudanças materiais. A data da última atualização está sempre indicada no topo desta página.</p>
+      <p>O uso continuado do BORA após as alterações entrarem em vigor constitui aceitação da política revisada.</p>
+    </div>
+
+    <div class="section" id="s12">
+      <h2><span class="section-number">12.</span> Contato</h2>
+      <p>Para dúvidas, exercício de direitos ou qualquer comunicação relacionada à privacidade dos seus dados:</p>
+      <div class="contact-block">
+        <p><strong>Enjoy Pineapple</strong></p>
+        <p>Encarregado de Dados (DPO): Pablo</p>
+        <p>E-mail: <a href="mailto:privacidade@enjoypineapple.com.br">privacidade@enjoypineapple.com.br</a></p>
+        <p>Cidade: Porto Alegre – RS – Brasil</p>
+      </div>
+      <p style="margin-top:1.5rem;">Você também pode contatar a <strong>Autoridade Nacional de Proteção de Dados (ANPD)</strong> em <a href="https://www.gov.br/anpd" style="color:var(--yellow);text-decoration:none;">gov.br/anpd</a> caso considere que seus direitos não foram atendidos.</p>
+    </div>
+
+  </div>
+
+  <footer>
+    <p class="footer-text">
+      © 2026 <a href="index.html">Enjoy Pineapple</a> · BORA App ·
+      <a href="privacidade.html">Privacidade</a> ·
+      <a href="termos.html">Termos</a> ·
+      <a href="suporte.html">Suporte</a>
+    </p>
+  </footer>
+
+</body>
+</html>
