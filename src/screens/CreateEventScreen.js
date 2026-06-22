@@ -3,12 +3,15 @@ import {
   Alert, KeyboardAvoidingView, Platform, ScrollView,
   StyleSheet, Text, TextInput, TouchableOpacity, View
 } from 'react-native';
-import { createEvent } from '../storage/events';
+import { createEvent, updateEvent } from '../storage/events';
+import Avatar from '../components/Avatar';
+import { PALETTES, DEFAULT_PALETTE_ID } from '../utils/palettes';
 
 export default function CreateEventScreen({ navigation }) {
   const [eventName, setEventName] = useState('');
   const [participantName, setParticipantName] = useState('');
   const [participants, setParticipants] = useState([]);
+  const [selectedPalette, setSelectedPalette] = useState(DEFAULT_PALETTE_ID);
 
   function addParticipant() {
     const name = participantName.trim();
@@ -36,7 +39,7 @@ export default function CreateEventScreen({ navigation }) {
     }
     const event = await createEvent(eventName.trim());
     event.participants = participants;
-    const { updateEvent } = await import('../storage/events');
+    event.paletteId = selectedPalette;
     await updateEvent(event);
     navigation.replace('EventDetail', { eventId: event.id });
   }
@@ -56,6 +59,34 @@ export default function CreateEventScreen({ navigation }) {
           autoFocus
         />
 
+        <Text style={styles.label}>Estilo visual</Text>
+        <View style={styles.paletteRow}>
+          {Object.values(PALETTES).map(p => {
+            const selected = selectedPalette === p.id;
+            return (
+              <TouchableOpacity
+                key={p.id}
+                style={[styles.paletteCard, selected && { borderColor: p.primary, borderWidth: 2.5 }]}
+                onPress={() => setSelectedPalette(p.id)}
+                activeOpacity={0.8}
+              >
+                <View style={styles.paletteSwatches}>
+                  <View style={[styles.swatch, { backgroundColor: p.preview[0], flex: 1.2 }]} />
+                  <View style={[styles.swatch, { backgroundColor: p.preview[1], flex: 1 }]} />
+                </View>
+                <Text style={styles.paletteEmoji}>{p.emoji}</Text>
+                <Text style={styles.paletteName} numberOfLines={1}>{p.name}</Text>
+                <Text style={styles.paletteDesc} numberOfLines={2}>{p.description}</Text>
+                {selected && (
+                  <View style={[styles.paletteCheck, { backgroundColor: p.primary }]}>
+                    <Text style={styles.paletteCheckText}>✓</Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+
         <Text style={styles.label}>Participantes</Text>
         <View style={styles.row}>
           <TextInput
@@ -71,20 +102,28 @@ export default function CreateEventScreen({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        {participants.map(p => (
-          <View key={p.id} style={styles.chip}>
-            <Text style={styles.chipText}>{p.name}</Text>
-            <TouchableOpacity onPress={() => removeParticipant(p.id)}>
-              <Text style={styles.chipRemove}>×</Text>
-            </TouchableOpacity>
+        {participants.length > 0 && (
+          <View style={styles.participantList}>
+            {participants.map((p, idx) => (
+              <View key={p.id} style={styles.participantRow}>
+                <Avatar name={p.name} index={idx} size={38} />
+                <Text style={styles.participantName}>{p.name}</Text>
+                <TouchableOpacity onPress={() => removeParticipant(p.id)} style={styles.removeBtn}>
+                  <Text style={styles.removeBtnText}>×</Text>
+                </TouchableOpacity>
+              </View>
+            ))}
           </View>
-        ))}
+        )}
 
         {participants.length > 0 && (
           <Text style={styles.count}>{participants.length} pessoa{participants.length !== 1 ? 's' : ''} adicionada{participants.length !== 1 ? 's' : ''}</Text>
         )}
 
-        <TouchableOpacity style={styles.createBtn} onPress={handleCreate}>
+        <TouchableOpacity
+          style={[styles.createBtn, { backgroundColor: PALETTES[selectedPalette].primary }]}
+          onPress={handleCreate}
+        >
           <Text style={styles.createBtnText}>Criar Evento →</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -113,21 +152,53 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   addBtnText: { color: '#fff', fontSize: 24, fontWeight: '600' },
-  chip: {
+  paletteRow: { flexDirection: 'row', gap: 8 },
+  paletteCard: {
+    flex: 1,
+    backgroundColor: '#fff',
+    borderRadius: 14,
+    borderWidth: 1.5,
+    borderColor: '#E5E7EB',
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  paletteSwatches: { flexDirection: 'row', height: 44 },
+  swatch: { height: '100%' },
+  paletteEmoji: { fontSize: 18, marginTop: 10, textAlign: 'center' },
+  paletteName: { fontSize: 11, fontWeight: '800', color: '#111827', textAlign: 'center', marginTop: 4, paddingHorizontal: 4 },
+  paletteDesc: { fontSize: 10, color: '#6B7280', textAlign: 'center', marginTop: 2, paddingHorizontal: 6, marginBottom: 10, lineHeight: 13 },
+  paletteCheck: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paletteCheckText: { color: '#fff', fontSize: 11, fontWeight: '800' },
+  participantList: {
+    backgroundColor: '#fff',
+    borderRadius: 14,
+    marginTop: 12,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    overflow: 'hidden',
+  },
+  participantRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#D1FAE5',
-    borderRadius: 20,
-    paddingVertical: 8,
-    paddingHorizontal: 14,
-    marginTop: 8,
-    alignSelf: 'flex-start',
+    padding: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
+    gap: 12,
   },
-  chipText: { fontSize: 14, color: '#065F46', fontWeight: '500' },
-  chipRemove: { fontSize: 20, color: '#065F46', marginLeft: 8, lineHeight: 20 },
-  count: { fontSize: 13, color: '#6B7280', marginTop: 12 },
+  participantName: { flex: 1, fontSize: 15, fontWeight: '500', color: '#111827' },
+  removeBtn: { padding: 4 },
+  removeBtnText: { fontSize: 22, color: '#9CA3AF', lineHeight: 22 },
+  count: { fontSize: 13, color: '#6B7280', marginTop: 10 },
   createBtn: {
-    backgroundColor: '#22C55E',
     borderRadius: 14,
     padding: 16,
     alignItems: 'center',

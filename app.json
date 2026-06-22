@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "racha",
-    "slug": "racha",
+    "name": "Divide Aí",
+    "slug": "divide-ai",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -19,6 +19,10 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-sharing",
+      "expo-web-browser"
+    ]
   }
 }
